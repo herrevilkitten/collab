@@ -1,0 +1,18 @@
+* Text fields
+* Shared cursor
+* Zoom and pan
+* Thumbnail - show other users' viewports
+* Support for comments
+-- Document comments
+-- Object comments
+-- Keyframes during comments
+* Document events -- join, leave, cursing
+* Semantic tagging
+* Search history -- by author? by time? by comment?
+* Keyframe timeline
+* "Infinite board"
+* Return to old viewport
+* Show others' activities
+* Layers
+* Images
+* Digital project room

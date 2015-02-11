@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org/DTD UrlRewrite 4.0//EN"
+	"http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+<urlrewrite>
+  <rule>
+    <from>^/(signin)(.*)</from>
+    <to>/api/login</to>
+  </rule>
+	<rule>
+		<from>^/(home|board)(.*)</from>
+		<to>/api/view</to>
+	</rule>
+	<rule>
+		<from>^/$</from>
+		<to>/api/view</to>
+	</rule>
+</urlrewrite>

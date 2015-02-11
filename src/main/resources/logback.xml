@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%level %date{dd-MMM HH:mm:ss.SSS}] \(%thread\) %class.%method\(\):%line %n%message%n%xException----%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${catalina.base}/logs/collab-warn.log</File>
+		<encoder>
+			<pattern>[%level %date{dd-MMM HH:mm:ss.SSS}] \(%thread\) %class.%method\(\):%line %n%message%n%xException----%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<maxIndex>10</maxIndex>
+			<FileNamePattern>${catalina.base}/logs/collab-warn.log.%i</FileNamePattern>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>100MB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>
+
+	<appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${catalina.base}/logs/collab-error.log</File>
+		<encoder>
+			<pattern>[%level %date{dd-MMM HH:mm:ss.SSS}] \(%thread\) %class.%method\(\):%line %n%message%n%xException----%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<maxIndex>10</maxIndex>
+			<FileNamePattern>${catalina.base}/logs/collab-warn.log.%i</FileNamePattern>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>100MB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>
+
+	<appender name="rolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${catalina.base}/logs/collab.log</File>
+		<encoder>
+			<pattern>[%level %date{dd-MMM HH:mm:ss.SSS}] \(%thread\) %class.%method\(\):%line %n%message%n%xException----%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<maxIndex>10</maxIndex>
+			<FileNamePattern>${catalina.base}/logs/collab.log.%i</FileNamePattern>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>100MB</MaxFileSize>
+		</triggeringPolicy>
+	</appender>
+	
+	<logger name="org.pixi" additivity="false" level="DEBUG">
+		<appender-ref ref="rolling" />
+		<appender-ref ref="warn" />
+		<appender-ref ref="error" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+	
+	<root level="WARN">
+		<appender-ref ref="rolling" />
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

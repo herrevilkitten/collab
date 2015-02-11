@@ -1,0 +1,94 @@
+.button {
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
+  background: -moz-linear-gradient(top, #fff, #ddd);
+  border: 1px solid #bbb;
+}
+
+.button:active {
+  background: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#333));
+  background: -moz-linear-gradient(bottom, #ddd, #aaa);
+}
+
+.left {
+  left: 0px;
+}
+
+.right {
+  right: 0px;
+  padding-right: 36px;
+}
+
+#signoutButton {
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  z-index: 1000;
+}
+
+#toolbox {
+  position: fixed;
+  top: 0px;
+  z-index: 1000;
+
+  #modebox {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
+
+  .colorToolbox {
+    position: absolute;
+    top: 120px;
+    left: 0px;
+
+    .colorpicker {
+      top: 0px !important;
+      left: 40px !important;
+      width: 200px !important;
+    }
+  }
+
+  .toolbox {
+    position: absolute;
+    top: 200px;
+    left: 0px;
+  }
+}
+
+#canvas {
+  cursor: crosshair;
+}
+
+* {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.svg-vector-pencil:before {
+  content: "\270F";
+}
+
+.svg-vector-line {
+  min-width: 24px;
+  min-height: 24px;
+
+  background-image: url('glyphicons/glyphicons/png/glyphicons_097_vector_path_line.png');
+}
+
+.svg-vector-square:before {
+  content: "\E095";
+}
+
+.svg-vector-circle:before {
+  content: "\e096";
+}
+
+.svg-vector-arc:before {
+  content: "\e099";
+}

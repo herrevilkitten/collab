@@ -1,0 +1,63 @@
+<div id="canvas"></div>
+<div id="toolbox" ng-class="{left: toolboxSide == 'left', right: toolboxSide == 'right'}">
+  <div id="modebox">
+    <div class="btn-group-vertical">
+      <button type="button" class="btn btn-primary" ng-model="mode" btn-radio="'d'">
+        <i title="Draw" class="fa fa-pencil"></i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-model="mode" btn-radio="'s'">
+        <i title="Select" class="fa fa-hand-o-up"></i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-model="mode" btn-radio="'c'">
+        <i title="Command" class="fa fa-arrow-circle-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="colorToolbox" class="colorToolbox">
+    <div class="btn-group-vertical">
+      <button class="btn btn-primary" ng-style="{'background-color': color.foreground, color: color.foreground}"
+              colorpicker="rgba" colorpicker-position="right" colorpicker-parent="true" colorpicker-fixed-position="true"
+              ng-model="color.foreground">
+        <i title="Select" class="fa fa-square"></i>
+      </button>
+      <button class="btn btn-primary" ng-style="{'background-color': color.fill, color: color.fill}" colorpicker="rgba"
+              colorpicker-position="right" colorpicker-parent="true" colorpicker-fixed-position="true"
+              ng-model="color.fill">
+        <i title="Select" class="fa fa-square"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="drawingToolbox" class="toolbox" ng-show="mode === 'd'">
+    <div class="btn-group-vertical">
+      <button type="button" class="btn btn-primary" ng-model="drawingMode" btn-radio="'p'">
+        <i title="Pencil" class="fa fa-pencil"></i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-model="drawingMode" btn-radio="'l'">
+        <i title="Line" class="fa">/</i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-model="drawingMode" btn-radio="'r'">
+        <i title="Rectangle" class="fa fa-square-o"></i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-model="drawingMode" btn-radio="'e'">
+        <i title="Ellipse" class="fa fa-circle-o"></i>
+      </button>
+    </div>
+  </div>
+  <div id="selectToolbox" class="toolbox" ng-show="mode === 's'">Select</div>
+  <div id="commandToolbox" class="toolbox" ng-show="mode === 'c'">
+    <div class="btn-group-vertical">
+      <button type="button" class="btn btn-primary" ng-click="command.clear()">
+        <i title="Clear" class="fa fa-trash-o"></i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-click="command.switchSides()">
+        <i title="Switch Sides" class="fa fa-arrows-h"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<ul>
+  <li ng-repeat="stroke in strokes">{{stroke}}</li>
+</ul>
