@@ -3,6 +3,7 @@ package org.pixi.collab.server.services.whiteboard;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.typesafe.config.Config;
 import org.nnsoft.guice.guartz.Scheduled;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -16,11 +17,12 @@ public class WhiteboardTasks implements Job {
     private static final Logger LOG = LoggerFactory.getLogger(WhiteboardTasks.class);
 
     private WhiteboardSession whiteboardSession;
+    private Config config;
 
     @Inject
-    public WhiteboardTasks(WhiteboardSession whiteboardSession) {
+    public WhiteboardTasks(WhiteboardSession whiteboardSession, Config config) {
         this.whiteboardSession = whiteboardSession;
-        System.err.println("Creating WhiteboardTasks");
+        LOG.info("Creating WhiteboardTasks");
     }
 
     @Override

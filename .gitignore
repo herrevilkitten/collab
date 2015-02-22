@@ -2,6 +2,9 @@
 *.iml
 .idea
 
-
 # Build directories and files
 target
+
+# Bower dependencies
+src/main/webapp/bower_components/
+

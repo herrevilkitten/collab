@@ -38,8 +38,8 @@
             gapi.auth.signIn({
                 callback: signinCallback
             });
-            event.stopPropagation();
-            event.preventDefault();
+            e.stopPropagation();
+            e.preventDefault();
         });
 
         var signoutButton = document.getElementById('signoutButton');
@@ -73,35 +73,37 @@
                         if (authResult.status.method !== 'AUTO') {
                             var request = window.gapi.client.plus.people.get({
                                 'userId': 'me'
-                            });/*
-                            request.execute(function(resp) {
-                                window.console.log('execute', resp);
-                                window.console.log('ID: ' + resp.id);
-                                window.console.log('Display Name: ' + resp.displayName);
-                                window.console.log('Image URL: ' + resp.image.url);
-                                window.console.log('Profile URL: ' + resp.url);
-                                window.console.log('Before sign in');
-                                var data = {
-                                    token: authResult.code,
-                                    state: window.state
-                                };
-                                window.console.log('data', data, JSON.stringify(data));*/
-                                window.$.ajax(
-                                        {
-                                            url: 'api/user/signin',
-                                            type: 'POST',
-                                            contentType: 'application/json',
-                                            data: JSON.stringify({
-                                                token: authResult.code,
-                                                state: window.state
-                                            })
-                                        }
-                                ).done(function(response) {
-                                            window.console.log('response', response);
+                            });
+                            /*
+                             request.execute(function(resp) {
+                             window.console.log('execute', resp);
+                             window.console.log('ID: ' + resp.id);
+                             window.console.log('Display Name: ' + resp.displayName);
+                             window.console.log('Image URL: ' + resp.image.url);
+                             window.console.log('Profile URL: ' + resp.url);
+                             window.console.log('Before sign in');
+                             var data = {
+                             token: authResult.code,
+                             state: window.state
+                             };
+                             window.console.log('data', data, JSON.stringify(data));*/
+                            window.$.ajax(
+                                    {
+                                        url: 'api/user/signin',
+                                        type: 'POST',
+                                        contentType: 'application/json',
+                                        data: JSON.stringify({
+                                            token: authResult.code,
+                                            state: window.state
+                                        })
+                                    }
+                            ).done(function(response) {
+                                        window.console.log('response', response);
                                         window.location = 'home';
-                                        });/*
-                                window.console.log('After sign in');
-                            });*/
+                                    });
+                            /*
+                             window.console.log('After sign in');
+                             });*/
                         }
                     }
             );
