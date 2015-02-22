@@ -94,6 +94,7 @@ public class UserWeb {
 
         GoogleIdToken idToken = tokenResponse.parseIdToken();
         String gplusId = idToken.getPayload().getSubject();
+
         LOG.info("gplusId: " + gplusId);
         LOG.info("email: " + idToken.getPayload().getEmail());
 

@@ -1,5 +1,15 @@
 package org.pixi.collab.server.services;
 
+import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
@@ -7,13 +17,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-
-import java.math.BigInteger;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
@@ -52,12 +55,29 @@ public class JspWeb {
         model.put("state", state);
         model.put("baseUrl", calculateBaseUrl(request));
 
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+
+            Enumeration<String> headers = request.getHeaders(headerName);
+            while (headers.hasMoreElements()) {
+                String headerValue = headers.nextElement();
+                LOG.info("Header {} = {}", headerName, headerValue);
+            }
+        }
+
         return new Viewable("/WEB-INF/views/login", model);
     }
 
     private String calculateBaseUrl(HttpServletRequest request) {
         String requestUrl = request.getRequestURL().toString();
         String contextPath = request.getContextPath();
+        String proxyUrl = getHeaderValue(request, "x-proxy-host");
+
+        if (proxyUrl != null) {
+            return proxyUrl;
+        }
+
         try {
             URL url = new URL(requestUrl);
             return new URL(url, contextPath + "/").toString();
@@ -67,5 +87,33 @@ public class JspWeb {
                 contextPath);
             throw new RuntimeException(e);
         }
+    }
+
+    private List<String> getHeaderValues(HttpServletRequest request, String header) {
+        List<String> headerValues = new ArrayList<>();
+
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            if (!headerName.equalsIgnoreCase(header)) {
+                continue;
+            }
+
+            Enumeration<String> headers = request.getHeaders(headerName);
+            while (headers.hasMoreElements()) {
+                String headerValue = headers.nextElement();
+                headerValues.add(headerValue);
+            }
+        }
+
+        return headerValues;
+    }
+
+    private String getHeaderValue(HttpServletRequest request, String header) {
+        List<String> headerValues = getHeaderValues(request, header);
+        if (headerValues.isEmpty()) {
+            return null;
+        }
+        return headerValues.get(0);
     }
 }

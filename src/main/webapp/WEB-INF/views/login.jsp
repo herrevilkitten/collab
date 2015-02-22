@@ -5,7 +5,7 @@
     <title>ColLab</title>
 
     <meta name="google-signin-clientid" content="114100310474.apps.googleusercontent.com"/>
-    <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login"/>
+    <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login email"/>
     <meta name="google-signin-requestvisibleactions" content="http://schemas.google.com/AddActivity"/>
     <meta name="google-signin-cookiepolicy" content="single_host_origin"/>
 
