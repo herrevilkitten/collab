@@ -11,7 +11,7 @@
     console.log('Setting up angular application');
     angular.module('svb', [ 'ngRoute', 'svb.modules', 'colorpicker.module', 'xeditable' ])
         .config(function($routeProvider, $locationProvider) {
-//            $locationProvider.html5Mode(true);
+            $locationProvider.html5Mode(true);
 
             console.log('Configuring routes');
             $routeProvider.when('/home', {
