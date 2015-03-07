@@ -33,6 +33,7 @@
     <filter-name>urlRewriteFilter</filter-name>
     <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter
     </filter-class>
+    <async-supported>true</async-supported>
   </filter>
 
   <filter-mapping>
@@ -43,7 +44,7 @@
   </filter-mapping>
 
   <listener>
-    <listener-class>org.pixi.collab.server.config.CollabGuiceServletConfig
+    <listener-class>org.evilkitten.collab.application.config.CollabGuiceServletConfig
     </listener-class>
   </listener>
 
@@ -53,16 +54,15 @@
     </servlet-class>
     <init-param>
       <param-name>com.sun.jersey.config.property.packages</param-name>
-      <param-value>org.pixi.collab.server</param-value>
+      <param-value>org.evilkitten.collab.application</param-value>
     </init-param>
     <init-param>
       <param-name>javax.ws.rs.Application</param-name>
-      <param-value>org.pixi.collab.server.CollabApplication</param-value>
+      <param-value>org.evilkitten.collab.application.CollabApplication</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
     <async-supported>true</async-supported>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>jersey</servlet-name>
     <url-pattern>/api/*</url-pattern>
@@ -74,7 +74,7 @@
     <servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
     <init-param>
       <param-name>org.atmosphere.cpr.packages</param-name>
-      <param-value>org.pixi.collab.server.services.atmosphere</param-value>
+      <param-value>org.evilkitten.collab.application.services.atmosphere</param-value>
     </init-param>
     <init-param>
       <param-name>org.atmosphere.cpr.AtmosphereInterceptor</param-name>

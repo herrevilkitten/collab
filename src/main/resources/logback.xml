@@ -54,13 +54,13 @@
 		</triggeringPolicy>
 	</appender>
 	
-	<logger name="org.pixi" additivity="false" level="DEBUG">
+	<logger name="org.evilkitten" additivity="false" level="DEBUG">
 		<appender-ref ref="rolling" />
 		<appender-ref ref="warn" />
 		<appender-ref ref="error" />
 		<appender-ref ref="STDOUT" />
 	</logger>
-	
+
 	<root level="WARN">
 		<appender-ref ref="rolling" />
 		<appender-ref ref="STDOUT" />
