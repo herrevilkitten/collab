@@ -1,0 +1,138 @@
+
+
+
+CREATE TABLE account (
+    id integer NOT NULL,
+    display_name character varying(128) NOT NULL,
+    email character varying(512) NOT NULL,
+    provider_id integer,
+    provider_account_id character varying(256) NOT NULL
+);
+
+
+--
+-- TOC entry 174 (class 1259 OID 16404)
+-- Name: account_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE account_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 2281 (class 0 OID 0)
+-- Dependencies: 174
+-- Name: account_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE account_id_seq OWNED BY account.id;
+
+
+--
+-- TOC entry 173 (class 1259 OID 16398)
+-- Name: provider; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE provider (
+    id integer NOT NULL,
+    name character varying(64) NOT NULL
+);
+
+
+--
+-- TOC entry 172 (class 1259 OID 16396)
+-- Name: provider_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE provider_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 2282 (class 0 OID 0)
+-- Dependencies: 172
+-- Name: provider_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE provider_id_seq OWNED BY provider.id;
+
+
+--
+-- TOC entry 2155 (class 2604 OID 16409)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account ALTER COLUMN id SET DEFAULT nextval('account_id_seq'::regclass);
+
+
+--
+-- TOC entry 2154 (class 2604 OID 16401)
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY provider ALTER COLUMN id SET DEFAULT nextval('provider_id_seq'::regclass);
+
+
+--
+-- TOC entry 2271 (class 0 OID 16398)
+-- Dependencies: 173
+-- Data for Name: provider; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY provider (id, name) FROM stdin;
+1	GOOGLE
+2	FACEBOOK
+3	TWITTER
+\.
+
+
+--
+-- TOC entry 2284 (class 0 OID 0)
+-- Dependencies: 172
+-- Name: provider_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('provider_id_seq', 4, true);
+
+
+--
+-- TOC entry 2159 (class 2606 OID 16414)
+-- Name: account_provider_id_provider_account_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account
+    ADD CONSTRAINT account_provider_id_provider_account_id_key UNIQUE (provider_id, provider_account_id);
+
+
+--
+-- TOC entry 2157 (class 2606 OID 16403)
+-- Name: provider_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY provider
+    ADD CONSTRAINT provider_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2160 (class 2606 OID 16415)
+-- Name: account_provider_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account
+    ADD CONSTRAINT account_provider_id_fkey FOREIGN KEY (provider_id) REFERENCES provider(id);
+
+
+-- Completed on 2015-03-07 17:37:48 EST
+
+--
+-- PostgreSQL database dump complete
+--
+
