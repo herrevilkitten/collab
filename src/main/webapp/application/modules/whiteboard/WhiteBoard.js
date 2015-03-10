@@ -16,9 +16,10 @@
         KEY_ESCAPE = 27,
         KEY_CONTROL = 17;
 
-    angular.module('svb.whiteboard', [ 'ui.bootstrap', 'colorpicker.module' ])
-        .controller('WhiteBoardController', [ '$scope', '$log', '$http', '$interval', 'Helper',
-            function($scope, $log, $http, $interval, Helper) {
+    angular.module('svb.whiteboard', ['ui.bootstrap', 'colorpicker.module'])
+        .controller('WhiteBoardController', [
+            '$scope', '$log', '$http', '$interval', 'Helper', '$timeout',
+            function($scope, $log, $http, $interval, Helper, $timeout) {
                 try {
                     $scope.color = {
                         foreground: 'rgba(0, 0, 0, 1)',
@@ -182,7 +183,7 @@
                                             firstChild = children[i];
                                         }
                                         window.console.log('Inside:', children[i]);
-                                        if ( $scope.selected) {
+                                        if ($scope.selected) {
                                             window.console.log('Parent:', $scope.selected.cloneParent)
                                         }
                                         if (!$scope.selected || ($scope.selected && foundSelected)) {
@@ -347,7 +348,6 @@
                                 transport: 'websocket',
                                 fallbackTransport: 'long-polling'
                             };
-                        window.console.log('$', $);
                         window.console.log('atmosphere', $.atmosphere);
 
                         request.onOpen = function(response) {
@@ -467,9 +467,14 @@
                         };
 
                         $scope.subSocket = socket.subscribe(request);
-                    }()
-                        )
-                    ;
+                        $timeout(function() {
+                            $scope.subSocket.push(JSON.stringify({
+                                author: $scope.uuid,
+                                message: 'query',
+                                type: 'query'
+                            }));
+                        }, 1000);
+                    }());
 
                 }
                 catch

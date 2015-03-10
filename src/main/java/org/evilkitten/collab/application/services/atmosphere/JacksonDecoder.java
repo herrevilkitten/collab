@@ -10,6 +10,7 @@ import org.evilkitten.collab.application.services.atmosphere.message.CollabMessa
 import org.evilkitten.collab.application.services.atmosphere.message.EllipseActionMessage;
 import org.evilkitten.collab.application.services.atmosphere.message.HeartbeatMessage;
 import org.evilkitten.collab.application.services.atmosphere.message.PathActionMessage;
+import org.evilkitten.collab.application.services.atmosphere.message.QueryMessage;
 import org.evilkitten.collab.application.services.atmosphere.message.RectangleActionMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,8 @@ public class JacksonDecoder implements Decoder<String, CollabMessage> {
                     messageClass = decodeActionMessage(type.substring(7));
                 } else if (type.equalsIgnoreCase("heartbeat")) {
                     messageClass = HeartbeatMessage.class;
+                } else if (type.equalsIgnoreCase("query")) {
+                    messageClass = QueryMessage.class;
                 }
             }
             return mapper.readValue(s, messageClass);

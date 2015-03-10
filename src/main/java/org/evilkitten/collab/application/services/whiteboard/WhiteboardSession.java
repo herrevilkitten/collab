@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class WhiteboardSession {
-    private Integer id;
+    private Integer id = 1;
     private Integer creator;
     private final List<WhiteboardAction> actions = new ArrayList<>();
 }

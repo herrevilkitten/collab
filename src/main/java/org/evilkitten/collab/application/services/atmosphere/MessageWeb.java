@@ -1,8 +1,9 @@
 package org.evilkitten.collab.application.services.atmosphere;
 
-import javax.servlet.http.HttpServlet;
-
 import java.util.UUID;
+
+import javax.inject.Singleton;
+import javax.servlet.http.HttpServlet;
 
 import com.google.inject.Injector;
 import org.atmosphere.config.service.Disconnect;
@@ -16,23 +17,26 @@ import org.evilkitten.collab.application.config.CollabGuiceServletConfig;
 import org.evilkitten.collab.application.services.atmosphere.message.ActionMessage;
 import org.evilkitten.collab.application.services.atmosphere.message.CollabMessage;
 import org.evilkitten.collab.application.services.atmosphere.message.HeartbeatMessage;
+import org.evilkitten.collab.application.services.atmosphere.message.QueryMessage;
 import org.evilkitten.collab.application.services.atmosphere.message.WelcomeMessage;
 import org.evilkitten.collab.application.services.whiteboard.WhiteboardAddAction;
 import org.evilkitten.collab.application.services.whiteboard.WhiteboardSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Singleton
 @ManagedService(path = "/chat")
 public class MessageWeb extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(MessageWeb.class);
 
-    final static WhiteboardSession whiteboardSession = new WhiteboardSession();
-
-    private static Injector injector;
+    private WhiteboardSession whiteboardSession = new WhiteboardSession();
 
     public MessageWeb() {
         LOG.info("Creating new MessageWeb");
-        this.injector = CollabGuiceServletConfig.injector;
+        Injector injector = CollabGuiceServletConfig.injector;
+        this.whiteboardSession = injector.getInstance(WhiteboardSession.class);
+
+        LOG.info("Using whiteboard session {}", this.whiteboardSession);
     }
 
     @Ready(encoders = {JacksonEncoder.class})
@@ -66,6 +70,8 @@ public class MessageWeb extends HttpServlet {
         LOG.info("{} sent [{}] {}", message.getAuthor(), message.getType(), message.getMessage());
         if (message instanceof HeartbeatMessage) {
             return null;
+        } else if (message instanceof QueryMessage) {
+            ((QueryMessage) message).getActions().addAll(whiteboardSession.getActions());
         } else if (message instanceof ActionMessage) {
             WhiteboardAddAction wbAction = new WhiteboardAddAction();
             wbAction.setId(UUID.randomUUID().toString());

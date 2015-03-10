@@ -36,7 +36,7 @@
     <script src="public/lib/svg/svg.path.js" type="text/javascript"></script>
     <script src="public/lib/pdollar/pdollar.js" type="text/javascript"></script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.atmosphere/2.1.2/jquery.atmosphere.min.js"
+    <script src="https://rawgit.com/Atmosphere/atmosphere-javascript/javascript-project-2.2.8/modules/jquery/src/main/webapp/jquery/jquery.atmosphere.js"
             type="text/javascript"></script>
 
     <jsp:include page="styles.jsp"/>
