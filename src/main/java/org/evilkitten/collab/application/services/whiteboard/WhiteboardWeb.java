@@ -20,7 +20,7 @@ public class WhiteboardWeb {
     @GET
     @Path("/actions")
     @Produces(MediaType.APPLICATION_JSON)
-    public WhiteboardActionResponse getAllActions(@QueryParam("from") final int from) {
+    public WhiteboardActionResponse getAllActions(@QueryParam("from") final int from) { 
         List<WhiteboardAction> actions = whiteboardSession.getActions();
 
         WhiteboardActionResponse response = new WhiteboardActionResponse(200);

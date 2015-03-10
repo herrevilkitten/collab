@@ -7,7 +7,7 @@ public class WhiteboardModule extends AbstractModule {
     @Override
     protected void configure() {
         System.err.println("Configuring WhiteboardModule");
-        bind(WhiteboardSession.class);
+        bind(WhiteboardSession.class).in(Singleton.class);
         bind(WhiteboardTasks.class).in(Singleton.class);
     }
 }

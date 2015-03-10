@@ -87,12 +87,9 @@ ALTER TABLE ONLY provider ALTER COLUMN id SET DEFAULT nextval('provider_id_seq':
 -- Data for Name: provider; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY provider (id, name) FROM stdin;
-1	GOOGLE
-2	FACEBOOK
-3	TWITTER
-\.
-
+INSERT INTO provider(name) VALUES ('GOOGLE');
+INSERT INTO provider(name) VALUES ('FACEBOOK');
+INSERT INTO provider(name) VALUES ('TWITTER');
 
 --
 -- TOC entry 2284 (class 0 OID 0)
