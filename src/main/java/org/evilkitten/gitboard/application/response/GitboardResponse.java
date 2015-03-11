@@ -5,16 +5,16 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollabResponse {
+public class GitboardResponse {
     private int status;
 
     private List<String> messages = new ArrayList<>();
 
-    public CollabResponse(int status) {
+    public GitboardResponse(int status) {
         setStatus(status);
     }
 
-    public CollabResponse(Response.Status status) {
+    public GitboardResponse(Response.Status status) {
         setStatus(status.getStatusCode());
     }
 

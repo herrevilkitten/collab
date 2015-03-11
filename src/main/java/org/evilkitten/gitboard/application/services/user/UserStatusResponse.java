@@ -3,9 +3,9 @@ package org.evilkitten.gitboard.application.services.user;
 import javax.ws.rs.core.Response;
 
 import org.evilkitten.gitboard.application.entity.User;
-import org.evilkitten.gitboard.application.response.CollabResponse;
+import org.evilkitten.gitboard.application.response.GitboardResponse;
 
-public class UserStatusResponse extends CollabResponse {
+public class UserStatusResponse extends GitboardResponse {
     private boolean signedIn;
     private User user;
 

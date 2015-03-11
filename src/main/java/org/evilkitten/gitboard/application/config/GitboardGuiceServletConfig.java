@@ -19,8 +19,8 @@ import org.nnsoft.guice.guartz.QuartzModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CollabGuiceServletConfig extends GuiceServletContextListener {
-    private static final Logger LOG = LoggerFactory.getLogger(CollabGuiceServletConfig.class);
+public class GitboardGuiceServletConfig extends GuiceServletContextListener {
+    private static final Logger LOG = LoggerFactory.getLogger(GitboardGuiceServletConfig.class);
     public static Injector injector;
     protected ServletContext servletContext;
 
@@ -30,7 +30,7 @@ public class CollabGuiceServletConfig extends GuiceServletContextListener {
         injector = Guice.createInjector(
             new UserModule(),
             new JspModule(),
-            new CollabServletModule(),
+            new GitboardServletModule(),
             new ConfigurationModule(servletContext),
             new DatabaseModule(),
             new WhiteboardModule(),

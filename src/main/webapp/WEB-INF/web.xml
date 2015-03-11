@@ -45,7 +45,7 @@
   </filter-mapping>
 
   <listener>
-    <listener-class>org.evilkitten.gitboard.application.config.CollabGuiceServletConfig
+    <listener-class>org.evilkitten.gitboard.application.config.GitboardGuiceServletConfig
     </listener-class>
   </listener>
 
@@ -59,7 +59,7 @@
     </init-param>
     <init-param>
       <param-name>javax.ws.rs.Application</param-name>
-      <param-value>org.evilkitten.gitboard.application.CollabApplication</param-value>
+      <param-value>org.evilkitten.gitboard.application.GitboardApplication</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
     <async-supported>true</async-supported>

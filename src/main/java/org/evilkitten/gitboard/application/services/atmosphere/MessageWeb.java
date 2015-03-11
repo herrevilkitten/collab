@@ -13,9 +13,9 @@ import org.atmosphere.config.service.Post;
 import org.atmosphere.config.service.Ready;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
-import org.evilkitten.gitboard.application.config.CollabGuiceServletConfig;
+import org.evilkitten.gitboard.application.config.GitboardGuiceServletConfig;
 import org.evilkitten.gitboard.application.services.atmosphere.message.ActionMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.CollabMessage;
+import org.evilkitten.gitboard.application.services.atmosphere.message.GitboardMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.HeartbeatMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.QueryMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.WelcomeMessage;
@@ -33,7 +33,7 @@ public class MessageWeb extends HttpServlet {
 
     public MessageWeb() {
         LOG.info("Creating new MessageWeb");
-        Injector injector = CollabGuiceServletConfig.injector;
+        Injector injector = GitboardGuiceServletConfig.injector;
         this.whiteboardSession = injector.getInstance(WhiteboardSession.class);
 
         LOG.info("Using whiteboard session {}", this.whiteboardSession);
@@ -66,7 +66,7 @@ public class MessageWeb extends HttpServlet {
     }
 
     @Message(encoders = {JacksonEncoder.class}, decoders = {JacksonDecoder.class})
-    public CollabMessage onMessage(CollabMessage message) {
+    public GitboardMessage onMessage(GitboardMessage message) {
         LOG.info("{} sent [{}] {}", message.getAuthor(), message.getType(), message.getMessage());
         if (message instanceof HeartbeatMessage) {
             return null;

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.evilkitten.gitboard.application.services.whiteboard.WhiteboardAction;
 
-public class WelcomeMessage extends CollabMessage {
+public class WelcomeMessage extends GitboardMessage {
     String uuid;
     final List<WhiteboardAction> actions = new ArrayList<>();
 

@@ -2,7 +2,7 @@ package org.evilkitten.gitboard.application.response;
 
 import javax.ws.rs.core.Response;
 
-public class ExceptionResponse extends CollabResponse {
+public class ExceptionResponse extends GitboardResponse {
     final Throwable throwable;
 
     public ExceptionResponse(int status, Throwable throwable) {

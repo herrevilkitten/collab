@@ -9,7 +9,7 @@ import lombok.Data;
 
 @XmlRootElement
 @Data
-public class CollabMessage {
+public class GitboardMessage {
     private final Calendar timestamp = GregorianCalendar.getInstance();
     private String author;
     private String message;

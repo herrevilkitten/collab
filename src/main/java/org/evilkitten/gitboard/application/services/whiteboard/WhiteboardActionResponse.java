@@ -5,9 +5,9 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.evilkitten.gitboard.application.response.CollabResponse;
+import org.evilkitten.gitboard.application.response.GitboardResponse;
 
-public class WhiteboardActionResponse extends CollabResponse {
+public class WhiteboardActionResponse extends GitboardResponse {
     private final List<WhiteboardAction> actions = new ArrayList<>();
     private int lastIndex;
 

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.atmosphere.config.managed.Decoder;
 import org.evilkitten.gitboard.application.services.atmosphere.message.ActionMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.CollabMessage;
+import org.evilkitten.gitboard.application.services.atmosphere.message.GitboardMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.EllipseActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.HeartbeatMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.PathActionMessage;
@@ -15,17 +15,17 @@ import org.evilkitten.gitboard.application.services.atmosphere.message.Rectangle
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JacksonDecoder implements Decoder<String, CollabMessage> {
+public class JacksonDecoder implements Decoder<String, GitboardMessage> {
     private static final Logger LOG = LoggerFactory.getLogger(JacksonDecoder.class);
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
-    public CollabMessage decode(String s) {
+    public GitboardMessage decode(String s) {
         try {
             System.err.println("Received " + s);
 
-            Class<? extends CollabMessage> messageClass = CollabMessage.class;
+            Class<? extends GitboardMessage> messageClass = GitboardMessage.class;
             JsonNode root = mapper.readTree(s);
             if (root.has("type")) {
                 String type = root.get("type").textValue();
@@ -45,8 +45,8 @@ public class JacksonDecoder implements Decoder<String, CollabMessage> {
         }
     }
 
-    private Class<? extends CollabMessage> decodeActionMessage(String actionType) {
-        Class<? extends CollabMessage> messageClass = ActionMessage.class;
+    private Class<? extends GitboardMessage> decodeActionMessage(String actionType) {
+        Class<? extends GitboardMessage> messageClass = ActionMessage.class;
 
         switch (actionType.toLowerCase()) {
             case "path":

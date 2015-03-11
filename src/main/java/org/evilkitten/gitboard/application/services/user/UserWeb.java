@@ -24,7 +24,7 @@ import com.typesafe.config.Config;
 import org.evilkitten.gitboard.application.database.query.RecordNotFoundException;
 import org.evilkitten.gitboard.application.entity.ProviderType;
 import org.evilkitten.gitboard.application.entity.User;
-import org.evilkitten.gitboard.application.response.CollabResponse;
+import org.evilkitten.gitboard.application.response.GitboardResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +61,7 @@ public class UserWeb {
     @POST
     @Path("/signin")
     @Produces(MediaType.APPLICATION_JSON)
-    public CollabResponse signIn(OAuthSignin signin, @Context HttpServletRequest request) throws IOException, SQLException {
+    public GitboardResponse signIn(OAuthSignin signin, @Context HttpServletRequest request) throws IOException, SQLException {
         HttpSession session = request.getSession();
         session.removeAttribute("session.user");
 
@@ -74,12 +74,12 @@ public class UserWeb {
 
         if (signin == null || sessionState == null) {
             LOG.info("sessionState is null");
-            return new CollabResponse(Response.Status.FORBIDDEN);
+            return new GitboardResponse(Response.Status.FORBIDDEN);
         }
         String clientState = signin.getState();
         if (clientState == null || !sessionState.equals(clientState)) {
             LOG.info("clientState is null");
-            return new CollabResponse(Response.Status.FORBIDDEN);
+            return new GitboardResponse(Response.Status.FORBIDDEN);
         }
         session.removeAttribute("state");
 
@@ -121,7 +121,7 @@ public class UserWeb {
     @GET
     @Path("/signout")
     @Produces(MediaType.APPLICATION_JSON)
-    public CollabResponse signOut(@Context HttpServletRequest request) {
+    public GitboardResponse signOut(@Context HttpServletRequest request) {
         HttpSession session = request.getSession();
 
         Object sessionUser = session.getAttribute("session.user");
@@ -134,7 +134,7 @@ public class UserWeb {
         return new UserStatusResponse();
     }
 
-    public CollabResponse status(@Context HttpServletRequest request) {
+    public GitboardResponse status(@Context HttpServletRequest request) {
         HttpSession session = request.getSession();
         User user = null;
 
