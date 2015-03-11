@@ -5,10 +5,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
-  <display-name>colLab</display-name>
+  <display-name>gitboard</display-name>
   <description>
     Multi-user collaborative environment that can integrate
-    with Google (and possibly other) services
+    with Google (and possibly other) services.  It is designed
+    to act similar to git and allow branching and merging.
   </description>
 
   <context-param>
@@ -44,7 +45,7 @@
   </filter-mapping>
 
   <listener>
-    <listener-class>org.evilkitten.collab.application.config.CollabGuiceServletConfig
+    <listener-class>org.evilkitten.gitboard.application.config.CollabGuiceServletConfig
     </listener-class>
   </listener>
 
@@ -54,11 +55,11 @@
     </servlet-class>
     <init-param>
       <param-name>com.sun.jersey.config.property.packages</param-name>
-      <param-value>org.evilkitten.collab.application</param-value>
+      <param-value>org.evilkitten.gitboard.application</param-value>
     </init-param>
     <init-param>
       <param-name>javax.ws.rs.Application</param-name>
-      <param-value>org.evilkitten.collab.application.CollabApplication</param-value>
+      <param-value>org.evilkitten.gitboard.application.CollabApplication</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
     <async-supported>true</async-supported>
@@ -74,7 +75,7 @@
     <servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
     <init-param>
       <param-name>org.atmosphere.cpr.packages</param-name>
-      <param-value>org.evilkitten.collab.application.services.atmosphere</param-value>
+      <param-value>org.evilkitten.gitboard.application.services.atmosphere</param-value>
     </init-param>
     <init-param>
       <param-name>org.atmosphere.cpr.AtmosphereInterceptor</param-name>

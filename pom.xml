@@ -3,16 +3,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.pixi.collab</groupId>
-  <artifactId>collab-server</artifactId>
+  <groupId>org.evilkitten.rg</groupId>
+  <artifactId>gitboard-server</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>collab-server</name>
+  <name>gitboard-server</name>
 
   <organization>
-    <name>GaTech, GVU, PIXI</name>
-    <url>http://www.cc.gatech.edu/pixi/</url>
+    <name>evilkitten.org</name>
+    <url>http://www.evilkitten.org/</url>
   </organization>
 
   <properties>
@@ -282,7 +282,7 @@
   </dependencies>
 
   <build>
-    <finalName>collab</finalName>
+    <finalName>gitboard</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -368,10 +368,10 @@
     <profile>
       <id>postgresql</id>
       <properties>
-        <collab.private.database.driver>org.postgresql.Driver</collab.private.database.driver>
-        <collab.private.database.url>jdbc:postgresql://localhost:5432/collab</collab.private.database.url>
-        <collab.private.database.username>collab</collab.private.database.username>
-        <collab.private.database.password></collab.private.database.password>
+        <gitboard.private.database.driver>org.postgresql.Driver</gitboard.private.database.driver>
+        <gitboard.private.database.url>jdbc:postgresql://localhost:5432/collab</gitboard.private.database.url>
+        <gitboard.private.database.username>collab</gitboard.private.database.username>
+        <gitboard.private.database.password></gitboard.private.database.password>
       </properties>
 
       <dependencies>
@@ -479,7 +479,7 @@
                 <java_opts>-XX:MaxPermSize=1G -XX:PermSize=1G</java_opts>
               </systemProperties>
               <httpsPort>${tomcat.httpsPort}</httpsPort>
-              <path>/collab</path>
+              <path>/gitboard</path>
 
               <keystoreFile>${basedir}/target/keystore</keystoreFile>
               <keystorePass>development</keystorePass>

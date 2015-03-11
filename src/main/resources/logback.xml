@@ -7,7 +7,7 @@
 	</appender>
 	
 	<appender name="warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>${catalina.base}/logs/collab-warn.log</File>
+		<File>${catalina.base}/logs/gitboard-warn.log</File>
 		<encoder>
 			<pattern>[%level %date{dd-MMM HH:mm:ss.SSS}] \(%thread\) %class.%method\(\):%line %n%message%n%xException----%n</pattern>
 		</encoder>
@@ -16,7 +16,7 @@
 		</filter>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<maxIndex>10</maxIndex>
-			<FileNamePattern>${catalina.base}/logs/collab-warn.log.%i</FileNamePattern>
+			<FileNamePattern>${catalina.base}/logs/gitboard-warn.log.%i</FileNamePattern>
 		</rollingPolicy>
 		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
 			<MaxFileSize>100MB</MaxFileSize>
@@ -24,7 +24,7 @@
 	</appender>
 
 	<appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>${catalina.base}/logs/collab-error.log</File>
+		<File>${catalina.base}/logs/gitboard-error.log</File>
 		<encoder>
 			<pattern>[%level %date{dd-MMM HH:mm:ss.SSS}] \(%thread\) %class.%method\(\):%line %n%message%n%xException----%n</pattern>
 		</encoder>
@@ -33,7 +33,7 @@
 		</filter>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<maxIndex>10</maxIndex>
-			<FileNamePattern>${catalina.base}/logs/collab-warn.log.%i</FileNamePattern>
+			<FileNamePattern>${catalina.base}/logs/gitboard-warn.log.%i</FileNamePattern>
 		</rollingPolicy>
 		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
 			<MaxFileSize>100MB</MaxFileSize>
@@ -41,13 +41,13 @@
 	</appender>
 
 	<appender name="rolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>${catalina.base}/logs/collab.log</File>
+		<File>${catalina.base}/logs/gitboard.log</File>
 		<encoder>
 			<pattern>[%level %date{dd-MMM HH:mm:ss.SSS}] \(%thread\) %class.%method\(\):%line %n%message%n%xException----%n</pattern>
 		</encoder>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<maxIndex>10</maxIndex>
-			<FileNamePattern>${catalina.base}/logs/collab.log.%i</FileNamePattern>
+			<FileNamePattern>${catalina.base}/logs/gitboard.log.%i</FileNamePattern>
 		</rollingPolicy>
 		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
 			<MaxFileSize>100MB</MaxFileSize>

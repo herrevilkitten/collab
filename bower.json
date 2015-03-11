@@ -1,7 +1,7 @@
 {
-  "name": "collab",
+  "name": "gitboard",
   "version": "0.0.0",
-  "homepage": "https://github.com/herrevilkitten/collab",
+  "homepage": "https://github.com/herrevilkitten/gitboard",
   "authors": [
     "ekidder3 <eric.kidder@gtri.gatech.edu>"
   ],
