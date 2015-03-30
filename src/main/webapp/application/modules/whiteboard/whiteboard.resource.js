@@ -15,6 +15,9 @@
                     return $http.post(baseUrl + '/create');
                 }
             };
+        })
+        .factory('CurrentBoard', function($routeParams) {
+            return $routeParams.boardId;
         });
 
 }(window.angular));

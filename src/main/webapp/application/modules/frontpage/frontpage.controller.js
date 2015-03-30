@@ -22,8 +22,9 @@
                 Whiteboard
                     .list()
                     .success(function(data) {
+                        $log.info('Retrieved boards:', data);
                         $scope.whiteboards.length = 0;
-                        angular.forEach(data, function(item, index) {
+                        angular.forEach(data, function(item) {
                             $scope.whiteboards.push(item);
                         });
                     })

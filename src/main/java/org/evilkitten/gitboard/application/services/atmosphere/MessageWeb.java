@@ -17,6 +17,7 @@ import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.evilkitten.gitboard.application.config.GitboardGuiceServletConfig;
 import org.evilkitten.gitboard.application.entity.User;
 import org.evilkitten.gitboard.application.services.atmosphere.message.ActionMessage;
+import org.evilkitten.gitboard.application.services.atmosphere.message.AddShapeActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.GitboardMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.HeartbeatMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.QueryMessage;
@@ -81,12 +82,15 @@ public class MessageWeb extends HttpServlet {
         User user = (User) resource.session().getAttribute("session.user");
         Whiteboard whiteboard = whiteboardDao.getById(message.getBoardId());
         LOG.info("{} sent [#{} {}] {}", user, message.getBoardId(),
-            message.getType(), message.getMessage());
+            message.getType(), message.toString());
         if (message instanceof HeartbeatMessage) {
             return null;
         } else if (message instanceof QueryMessage) {
             ((QueryMessage) message).getActions().addAll(whiteboard.getActions());
         } else if (message instanceof ActionMessage) {
+            if (message instanceof AddShapeActionMessage) {
+                whiteboardDao.addShapeToWhiteboard(((AddShapeActionMessage) message).getShape(), whiteboard);
+            }
             WhiteboardAddAction wbAction = new WhiteboardAddAction();
             wbAction.setId(UUID.randomUUID().toString());
             wbAction.setActor(user);

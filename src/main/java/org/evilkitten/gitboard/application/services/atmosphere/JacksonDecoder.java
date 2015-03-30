@@ -6,13 +6,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.atmosphere.config.managed.Decoder;
 import org.evilkitten.gitboard.application.services.atmosphere.message.ActionMessage;
+import org.evilkitten.gitboard.application.services.atmosphere.message.AddShapeActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.GitboardMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.EllipseActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.HeartbeatMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.LineActionMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.PathActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.QueryMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.RectangleActionMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,17 +27,15 @@ public class JacksonDecoder implements Decoder<String, GitboardMessage> {
             JsonNode root = mapper.readTree(s);
             if (root.has("type")) {
                 String type = root.get("type").textValue();
-                if (type.startsWith("action.")) {
-                    LOG.info("Action type is {}", type.substring(7));
-                    messageClass = decodeActionMessage(type.substring(7));
-                } else if (type.equalsIgnoreCase("heartbeat")) {
-                    messageClass = HeartbeatMessage.class;
-                } else if (type.equalsIgnoreCase("query")) {
-                    messageClass = QueryMessage.class;
-                }
+                LOG.info("Message type is {}", type);
+
+                messageClass = (Class<? extends GitboardMessage>) Class.forName(type);
             }
             return mapper.readValue(s, messageClass);
         } catch (IOException e) {
+            LOG.error(e.toString(), e);
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             LOG.error(e.toString(), e);
             throw new RuntimeException(e);
         }
@@ -48,22 +43,22 @@ public class JacksonDecoder implements Decoder<String, GitboardMessage> {
 
     private Class<? extends GitboardMessage> decodeActionMessage(String actionType) {
         Class<? extends GitboardMessage> messageClass = ActionMessage.class;
-
+/*
         switch (actionType.toLowerCase()) {
             case "path":
-                messageClass = PathActionMessage.class;
+                messageClass = PathActionMessageAdd.class;
                 break;
             case "rect":
-                messageClass = RectangleActionMessage.class;
+                messageClass = RectangleActionMessageAdd.class;
                 break;
             case "ellipse":
-                messageClass = EllipseActionMessage.class;
+                messageClass = EllipseActionMessageAdd.class;
                 break;
             case "line":
-                messageClass = LineActionMessage.class;
+                messageClass = LineActionMessageAdd.class;
                 break;
         }
-
+*/
         return messageClass;
     }
 }

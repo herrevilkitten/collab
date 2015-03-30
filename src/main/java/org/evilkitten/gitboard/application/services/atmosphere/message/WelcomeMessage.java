@@ -9,11 +9,6 @@ public class WelcomeMessage extends GitboardMessage {
     String uuid;
     final List<WhiteboardAction> actions = new ArrayList<>();
 
-    @Override
-    public String getType() {
-        return "welcome";
-    }
-
     public String getUuid() {
         return uuid;
     }

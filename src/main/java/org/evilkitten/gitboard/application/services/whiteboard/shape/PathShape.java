@@ -1,4 +1,4 @@
-package org.evilkitten.gitboard.application.services.atmosphere.message;
+package org.evilkitten.gitboard.application.services.whiteboard.shape;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,13 +6,8 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class PathActionMessage extends ShapeActionMessage {
+public class PathShape extends BaseShape {
     private final List<Segment> segments = new ArrayList<>();
-
-    @Override
-    public String getType() {
-        return "action.path";
-    }
 
     @Data
     public static class Segment {

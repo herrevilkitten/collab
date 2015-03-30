@@ -9,9 +9,4 @@ import org.evilkitten.gitboard.application.services.whiteboard.WhiteboardAction;
 @Data
 public class QueryMessage extends GitboardMessage {
     final List<WhiteboardAction> actions = new ArrayList<>();
-
-    @Override
-    public String getType() {
-        return "query";
-    }
 }

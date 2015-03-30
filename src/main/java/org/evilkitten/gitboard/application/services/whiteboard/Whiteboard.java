@@ -10,6 +10,7 @@ import org.evilkitten.gitboard.application.entity.User;
 @Data
 public class Whiteboard {
     private Integer id = 1;
+    private String name = "";
     private User creator;
     private Date creationTime;
 

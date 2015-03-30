@@ -5,7 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.evilkitten.gitboard.application.entity.User;
-import org.evilkitten.gitboard.application.services.atmosphere.message.ShapeActionMessage;
+import org.evilkitten.gitboard.application.services.atmosphere.message.AddShapeActionMessage;
 
 public class DefaultWhiteboardService {
     private final WhiteboardDao whiteboardDao;
@@ -28,7 +28,7 @@ public class DefaultWhiteboardService {
         return whiteboardDao.create(creator);
     }
 
-    public void addShape(Whiteboard whiteboard, ShapeActionMessage action) {
+    public void addShape(Whiteboard whiteboard, AddShapeActionMessage action) {
 
     }
 }
