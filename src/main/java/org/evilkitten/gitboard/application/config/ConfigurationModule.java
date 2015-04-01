@@ -38,6 +38,7 @@ public class ConfigurationModule extends AbstractModule {
             .withSources(
                 ConfigFactory.classpathResource("application"),
                 ConfigFactory.classpathResource("postgres"),
+                ConfigFactory.classpathResource("postgres.whiteboard"),
                 systemProperties()
             )
             .fromLowestToHighestPrecedence()

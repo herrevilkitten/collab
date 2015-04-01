@@ -9,4 +9,9 @@ public class EllipseActionMessage extends ShapeActionMessage {
     private Point position;
 
     private Dimensions dimensions;
+
+    @Override
+    public String getType() {
+        return "action.ellipse";
+    }
 }

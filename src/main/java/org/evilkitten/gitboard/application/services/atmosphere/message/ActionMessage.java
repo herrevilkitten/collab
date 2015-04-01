@@ -5,5 +5,5 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ActionMessage extends GitboardMessage {
+abstract public class ActionMessage extends GitboardMessage {
 }

@@ -9,6 +9,7 @@ import org.evilkitten.gitboard.application.services.atmosphere.message.ActionMes
 import org.evilkitten.gitboard.application.services.atmosphere.message.GitboardMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.EllipseActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.HeartbeatMessage;
+import org.evilkitten.gitboard.application.services.atmosphere.message.LineActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.PathActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.QueryMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.RectangleActionMessage;
@@ -57,6 +58,9 @@ public class JacksonDecoder implements Decoder<String, GitboardMessage> {
                 break;
             case "ellipse":
                 messageClass = EllipseActionMessage.class;
+                break;
+            case "line":
+                messageClass = LineActionMessage.class;
                 break;
         }
 

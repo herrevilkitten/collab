@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ShapeActionMessage extends ActionMessage {
+abstract public class ShapeActionMessage extends ActionMessage {
     private String stroke;
 
     @Data

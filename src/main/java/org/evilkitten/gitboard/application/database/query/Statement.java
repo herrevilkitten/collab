@@ -144,9 +144,36 @@ public class Statement {
         }
     }
 
+    private UncheckedResultSet executeUpdateAndReturn(Connection connection, String... keys) throws SQLException {
+        try {
+            String sql = prepareStatement();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, keys);
+
+            int parameterIndex = 1;
+            for (Object parameter : preparedParameters) {
+                preparedStatement.setObject(parameterIndex++, parameter);
+
+            }
+
+            preparedStatement.executeUpdate();
+            return new UncheckedResultSet(preparedStatement.getGeneratedKeys());
+        } catch (Exception e) {
+            LOG.error("Exception while executing statement: {}", statementBuilder.toString());
+            throw e;
+        }
+    }
+
     public int update(DataSource dataSource) {
         try (Connection connection = dataSource.getConnection()) {
             return executeUpdate(connection);
+        } catch (SQLException exception) {
+            throw new StatementException(exception);
+        }
+    }
+
+    public UncheckedResultSet updateAndReturn(Connection connection, String... columns) {
+        try {
+            return executeUpdateAndReturn(connection, columns);
         } catch (SQLException exception) {
             throw new StatementException(exception);
         }

@@ -16,10 +16,10 @@
         KEY_ESCAPE = 27,
         KEY_CONTROL = 17;
 
-    angular.module('svb.whiteboard', ['ui.bootstrap', 'colorpicker.module'])
+    angular.module('gitboard.whiteboard')
         .controller('WhiteBoardController', [
-            '$scope', '$log', '$http', '$interval', 'Helper', '$timeout',
-            function($scope, $log, $http, $interval, Helper, $timeout) {
+            '$scope', '$log', '$http', '$interval', 'Helper', '$timeout', '$routeParams', '$location',
+            function($scope, $log, $http, $interval, Helper, $timeout, $routeParams, $location) {
                 try {
                     $scope.color = {
                         foreground: 'rgba(0, 0, 0, 1)',
@@ -28,6 +28,7 @@
                             return new SVG.Color(color).complementary();
                         }
                     };
+                    $scope.boardId = $routeParams.boardId;
                     $scope.selected = null;
                     $scope.uuid = null;
                     $scope.mode = MODE_DRAWING;
@@ -278,7 +279,7 @@
 
                     $scope.addAction = function(action) {
                         var data = {
-                            author: $scope.uuid,
+                            boardId: $scope.boardId,
                             type: 'action.' + action.type
                         };
 
@@ -333,7 +334,7 @@
                     $interval(function() {
                         window.console.log('Heartbeat');
                         $scope.subSocket.push(JSON.stringify({
-                            author: $scope.uuid,
+                            boardId: $scope.boardId,
                             message: 'heartbeat',
                             type: 'heartbeat'
                         }));
@@ -342,7 +343,7 @@
                     (function() {
                         var socket = $.atmosphere,
                             request = {
-                                url: 'chat',
+                                url: 'chat/' + $scope.boardId,
                                 contentType: 'application/json',
                                 logLevel: 'debug',
                                 transport: 'websocket',
@@ -365,6 +366,9 @@
                                 actions,
                                 action,
                                 segments;
+                            if (response.responseBody === '|') {
+                                return;
+                            }
                             window.console.log('Received:', response);
                             window.console.log('ResponseBody', response.responseBody);
                             try {
@@ -446,11 +450,10 @@
                                         break;
                                     }
                                 }
-                            }
-                            catch
-                                (e) {
+                            } catch (e) {
                                 window.console.log('Exception', e);
                                 window.console.log('This does not look like valid JSON: ', message);
+                                $location.path('');
                                 return;
                             }
                             window.console.log('ResponseObject:', json);
@@ -469,7 +472,7 @@
                         $scope.subSocket = socket.subscribe(request);
                         $timeout(function() {
                             $scope.subSocket.push(JSON.stringify({
-                                author: $scope.uuid,
+                                boardId: $scope.boardId,
                                 message: 'query',
                                 type: 'query'
                             }));

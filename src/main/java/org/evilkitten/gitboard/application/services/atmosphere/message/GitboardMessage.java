@@ -1,17 +1,18 @@
 package org.evilkitten.gitboard.application.services.atmosphere.message;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 import lombok.Data;
 
 @XmlRootElement
 @Data
-public class GitboardMessage {
+abstract public class GitboardMessage {
     private final Calendar timestamp = GregorianCalendar.getInstance();
-    private String author;
+    private Integer boardId;
     private String message;
-    private String type = "";
+
+    abstract public String getType();
 }

@@ -2,6 +2,7 @@ package org.evilkitten.gitboard.application.services.atmosphere;
 
 import java.util.UUID;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServlet;
 
@@ -14,38 +15,47 @@ import org.atmosphere.config.service.Ready;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.evilkitten.gitboard.application.config.GitboardGuiceServletConfig;
+import org.evilkitten.gitboard.application.entity.User;
 import org.evilkitten.gitboard.application.services.atmosphere.message.ActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.GitboardMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.HeartbeatMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.QueryMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.WelcomeMessage;
+import org.evilkitten.gitboard.application.services.whiteboard.Whiteboard;
 import org.evilkitten.gitboard.application.services.whiteboard.WhiteboardAddAction;
-import org.evilkitten.gitboard.application.services.whiteboard.WhiteboardSession;
+import org.evilkitten.gitboard.application.services.whiteboard.WhiteboardDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Singleton
-@ManagedService(path = "/chat")
+@ManagedService(path = "{boardId}")
 public class MessageWeb extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(MessageWeb.class);
 
-    private WhiteboardSession whiteboardSession = new WhiteboardSession();
+    private final WhiteboardDao whiteboardDao;
 
-    public MessageWeb() {
+    @Inject
+    public MessageWeb(WhiteboardDao whiteboardDao) {
         LOG.info("Creating new MessageWeb");
+        LOG.info("Got a dao: " + whiteboardDao);
         Injector injector = GitboardGuiceServletConfig.injector;
-        this.whiteboardSession = injector.getInstance(WhiteboardSession.class);
-
-        LOG.info("Using whiteboard session {}", this.whiteboardSession);
+//        this.whiteboardDao = injector.getInstance(WhiteboardDao.class);
+        this.whiteboardDao = whiteboardDao;
     }
 
     @Ready(encoders = {JacksonEncoder.class})
     public WelcomeMessage onReady(final AtmosphereResource resource) {
-        LOG.info("Browser {} connected", resource.uuid());
+        String broadcasterId = resource.getBroadcaster().getID();
+        LOG.info("Browser {} connected to {}", resource.uuid(), broadcasterId);
+
+        // "/chat/7777"
+        int boardId = Integer.parseInt(broadcasterId.substring(6));
+        Whiteboard whiteboard = whiteboardDao.getById(boardId);
 
         WelcomeMessage wm = new WelcomeMessage();
+        wm.setBoardId(boardId);
         wm.setUuid(resource.uuid());
-        wm.getActions().addAll(whiteboardSession.getActions());
+        wm.getActions().addAll(whiteboard.getActions());
         return wm;
     }
 
@@ -61,25 +71,29 @@ public class MessageWeb extends HttpServlet {
     @Post
     public void onPost(AtmosphereResource resource) {
         resource.session().getAttribute("session.user");
+
         LOG.info("Last session access for {}: {}", resource.uuid(), resource.session().getLastAccessedTime());
         LOG.info("Message is {}", resource.getRequest().body().asString());
     }
 
     @Message(encoders = {JacksonEncoder.class}, decoders = {JacksonDecoder.class})
-    public GitboardMessage onMessage(GitboardMessage message) {
-        LOG.info("{} sent [{}] {}", message.getAuthor(), message.getType(), message.getMessage());
+    public GitboardMessage onMessage(AtmosphereResource resource, GitboardMessage message) {
+        User user = (User) resource.session().getAttribute("session.user");
+        Whiteboard whiteboard = whiteboardDao.getById(message.getBoardId());
+        LOG.info("{} sent [#{} {}] {}", user, message.getBoardId(),
+            message.getType(), message.getMessage());
         if (message instanceof HeartbeatMessage) {
             return null;
         } else if (message instanceof QueryMessage) {
-            ((QueryMessage) message).getActions().addAll(whiteboardSession.getActions());
+            ((QueryMessage) message).getActions().addAll(whiteboard.getActions());
         } else if (message instanceof ActionMessage) {
             WhiteboardAddAction wbAction = new WhiteboardAddAction();
             wbAction.setId(UUID.randomUUID().toString());
-            wbAction.setActor(message.getAuthor());
+            wbAction.setActor(user);
             wbAction.setType(message.getType());
             wbAction.setObject((ActionMessage) message);
 
-            whiteboardSession.getActions().add(wbAction);
+            whiteboard.getActions().add(wbAction);
             LOG.info("Action: {}", message);
         }
         return message;
