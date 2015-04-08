@@ -16,12 +16,12 @@ import org.slf4j.LoggerFactory;
 public class WhiteboardTasks implements Job {
     private static final Logger LOG = LoggerFactory.getLogger(WhiteboardTasks.class);
 
-    private WhiteboardSession whiteboardSession;
+    private Whiteboard whiteboard;
     private Config config;
 
     @Inject
-    public WhiteboardTasks(WhiteboardSession whiteboardSession, Config config) {
-        this.whiteboardSession = whiteboardSession;
+    public WhiteboardTasks(Whiteboard whiteboard, Config config) {
+        this.whiteboard = whiteboard;
         LOG.info("Creating WhiteboardTasks");
     }
 

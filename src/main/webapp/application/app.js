@@ -2,14 +2,14 @@
     'use strict';
 
     console.log('Setting up application modules');
-    angular.module('svb.modules', [
-        'svb.frontpage',
-        'svb.whiteboard',
-        'svb.user'
+    angular.module('gitboard.modules', [
+        'gitboard.frontpage',
+        'gitboard.whiteboard',
+        'gitboard.user'
     ]);
 
     console.log('Setting up angular application');
-    angular.module('svb', [ 'ngRoute', 'svb.modules', 'colorpicker.module', 'xeditable' ])
+    angular.module('gitboard', [ 'ngRoute', 'gitboard.modules', 'colorpicker.module', 'xeditable' ])
         .config(function($routeProvider, $locationProvider) {
             $locationProvider.html5Mode(true);
 
@@ -18,7 +18,7 @@
                 templateUrl: 'application/modules/frontpage/frontpage.html',
                 controller: 'FrontPageController'
             });
-            $routeProvider.when('/board', {
+            $routeProvider.when('/board/:boardId', {
                 templateUrl: 'application/modules/whiteboard/whiteboard.html',
                 controller: 'WhiteBoardController'
             });

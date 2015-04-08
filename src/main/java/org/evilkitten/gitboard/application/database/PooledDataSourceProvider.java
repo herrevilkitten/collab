@@ -29,9 +29,11 @@ public class PooledDataSourceProvider implements DataSourceProvider {
             if (username != null) {
                 dataSource.setUsername(username);
             }
+
             if (password != null) {
                 dataSource.setPassword(password);
             }
+
             dataSource.setDriverClassName(config.getString("gitboard.private.database.driver"));
             dataSource.setUrl(config.getString("gitboard.private.database.url"));
             dataSource.setInitialSize(1);

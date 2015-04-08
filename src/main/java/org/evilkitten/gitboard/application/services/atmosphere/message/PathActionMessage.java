@@ -9,6 +9,11 @@ import lombok.Data;
 public class PathActionMessage extends ShapeActionMessage {
     private final List<Segment> segments = new ArrayList<>();
 
+    @Override
+    public String getType() {
+        return "action.path";
+    }
+
     @Data
     public static class Segment {
         String type;

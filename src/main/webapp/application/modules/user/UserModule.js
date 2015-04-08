@@ -1,7 +1,7 @@
 (function(angular, SVG, gapi, $) {
     'use strict';
 
-    angular.module('svb.user', [])
+    angular.module('gitboard.user', [])
         .factory('UserService', ['$log', '$resource',
             function($log, $resource) {
                 $log.debug('Creating UserService');

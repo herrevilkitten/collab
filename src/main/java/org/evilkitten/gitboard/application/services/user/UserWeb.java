@@ -50,12 +50,12 @@ public class UserWeb {
     private static final JacksonFactory JSON_FACTORY = new JacksonFactory();
 
     private final Config config;
-    private final UserDao userDao;
+    private final UserService userService;
 
     @Inject
-    public UserWeb(Config config, UserDao userDao) {
+    public UserWeb(Config config, UserService userService) {
         this.config = config;
-        this.userDao = userDao;
+        this.userService = userService;
     }
 
     @POST
@@ -100,7 +100,7 @@ public class UserWeb {
 
         User user = null;
         try {
-            user = userDao.getByProvider(ProviderType.GOOGLE, gplusId);
+            user = userService.getByProvider(ProviderType.GOOGLE, gplusId);
         } catch (RecordNotFoundException e) {
             LOG.info("No GOOGLE user for {}", gplusId);
             user = new User();
@@ -110,7 +110,7 @@ public class UserWeb {
             user.setProviderType(ProviderType.GOOGLE);
             user.setProviderId(gplusId);
 
-            user = userDao.add(user);
+            user = userService.add(user);
             LOG.info("User {} added to system with ID {}", user.getEmail(), user.getId());
         }
         LOG.info("User {} ({}/{}): sign in", user.getId(), user.getProviderType(), user.getProviderId());

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="svb">
+<html ng-app="gitboard">
 <head>
     <base href="${it.baseUrl}"/>
     <title>GitBoard</title>
@@ -51,7 +51,12 @@
 
 <script src="application/app.js"></script>
 <script src="application/modules/user/UserModule.js"></script>
-<script src="application/modules/frontpage/FrontPageController.js"></script>
-<script src="application/modules/whiteboard/WhiteBoard.js"></script>
+<!-- Front page -->
+<script src="application/modules/frontpage/frontpage.controller.js"></script>
+
+<!-- Whiteboard -->
+<script src="application/modules/whiteboard/whiteboard.module.js"></script>
+<script src="application/modules/whiteboard/whiteboard.controller.js"></script>
+<script src="application/modules/whiteboard/whiteboard.resource.js"></script>
 </body>
 </html>
