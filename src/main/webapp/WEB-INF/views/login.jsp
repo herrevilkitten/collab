@@ -20,13 +20,20 @@
 
     <jsp:include page="styles.jsp"/>
 </head>
-<body>
-<div>
-    <button id="signinButton">Sign in with Google</button>
-    <button id="signoutButton" style="display: none;">Sign out</button>
+<body style="border:13px solid grey;">
+<div id="signinContainer" style="width:500px; height:600px; position:fixed; left:35%; top:22%; background-image:url(public/images/signinBackground.png);">
+	<div id="signinBanner" style="width:100%; height:50px; background-image:url(public/images/gitBoardBanner.png);">
+		<span id="signinTitle" style="color:white; font-weight:bold; font-size:33px; font-family:Antiqua; margin-left: 10px; position:relative; top:0px;">GitBoard</span>
+	</div>
+	<div id="signinContentContainer" style="width:100%; height:500px;">
+		<button id="signinButton" style="position:relative; left:35%; top:25%;">Sign in with Google</button>
+		<button id="signoutButton" style="display: none;">Sign out</button>
+	</div>
+	<div id="signinFooter" style="width:100%; height:50px; background-image:url(public/images/signinFooter.png);">
+		<img src="public/images/collab.png" style="position:relative; width:95px; bottom:25px;"/>
+		<span id="footerText" style="font-size:16px; font-weight:bold; font-family:DKSun; position:absolute; right:18px; bottom:12px;">Brought to you by:   Eric Kidder, Clayton Feustel</span>
+	</div>
 </div>
-
-<img src="public/images/collab.png"/>
 
 <script type="text/javascript">
     var state = '${it.state}';

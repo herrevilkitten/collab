@@ -1,62 +1,75 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-8">
-      <div class="row">
-        <div class="col-md-12">
-          <a ng-href="" ng-click="createWhiteboard()">Start a new collaboration.</a>
+<div class="container-fluid" id="mainContentContainer">
+    <div id="savedBoardsContainer">
+        <div class="boardContentBanner" id="savedBoardsBanner">
+            <span class="boardBannerTitle" id="savedBoardTitle">Saved Whiteboards</span>
+            <div class="boardToolsContainer" id="savedBoardTools">
+                <img class="boardToolView boardTool" alt="Switch the content view" src="public/images/boardListView.png" onmouseover="highlightButton(this)" onmouseout="unhighlightButton(this)" />
+                <img class="boardToolAddNew boardTool" alt="Create a new board" src="public/images/addNewBoard.png" onmouseover="highlightButton(this)" onmouseout="unhighlightButton(this)" onclick="createNewBoard(this)" />
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h3>Favorites</h3>
+        <div class="boardContentContent" id="savedBoardContet">
+            <div ng-repeat="whiteboard in whiteboards">
+                <a ng-href="board/{{whiteboard.id}}">Whiteboard #{{whiteboard.id}}</a>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4">
-          <a ng-href="board">Favorite!</a>
-        </div>
-        <div class="col-md-4">
-          <a ng-href="board">Favorite!</a>
-        </div>
-        <div class="col-md-4">
-          <a ng-href="board">Favorite!</a>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h3>Collaborations</h3>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-4" ng-repeat="whiteboard in whiteboards">
-          <a ng-href="board/{{whiteboard.id}}">Whiteboard #{{whiteboard.id}}</a>
-        </div>
-      </div>
     </div>
-    <div class="col-md-4">
-      <div class="row">
-        <div class="col-md-12">
-          <h3>News</h3>
+    <div id="sharedBoardsContainer">
+        <div class="boardContentBanner" id="sharedBoardsBanner">
+            <span class="boardBannerTitle" id="sharedBoarTitle">Shared Whiteboard</span>
+            <div class="boardToolsContainer" id="sharedBoardTools">
+                <img class="boardToolView boardTool" alt="Switch the content view" src="public/images/boardListView.png" onmouseover="highlightButton(this)" onmouseout="unhighlightButton(this)" />
+                <!--<img class="boardToolAddNew" alt="Create a new board" src="public/images/addNewBoard.png" onmouseover="highlightButton(this)" onmouseout="unhighlightButton(this)" />-->
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          Welcome to GitBoard, an awesome collaboration tool. Really.
+        <div class="boardContentContent" id="sharedBoardsContent">
+
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h3>Invitiations</h3>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          Invitation!
-        </div>
-      </div>
     </div>
-  </div>
+    <div id="invitations">
+    </div>
 </div>
 
+<div id="windowPrompt"></div>
+<div id="newBoardPropertiesWindow">
+    <div id="newBoardPropertiesBanner">
+        <span id="newBoardPropTitle">Create New Whiteboard</span>
+    </div>
+    <div id="newBoardPropertiesContent">
+        <div id="nameEntryContainer">
+            <span id="boardNamePrompt">Whiteboard Name: </span>
+            <input type="text" id="boardNameEntry" />
+        </div>
+        <div id="buttonContainer">
+            <button id="cancelNewBoardButton" onclick="cancelNewBoard()">Cancel</button>
+            <button id="okNewBoardButton" ng-click="createWhiteboard()">OK</button>
+        </div>
+    </div>
+</div>
 
-<img src="public/images/collab.png"/>
+<img id="logo" style="position:absolute; bottom:0px; right:0px; height:50px; width:50px;" src="public/images/collab.png" />
+
+<script type="text/javascript">
+    //Change the height of the containing div
+    document.getElementById("mainContentContainer").parentElement.style.height = "100%";
+
+    function highlightButton(button) {
+        button.style.border = " 1px solid #686868";
+    }
+
+    function unhighlightButton(button) {
+        button.style.border = "0px";
+    }
+
+    function createNewBoard(button) {
+        document.getElementById("windowPrompt").style.visibility = "visible";
+        document.getElementById("newBoardPropertiesWindow").style.visibility = "visible";
+        document.getElementById("main")
+    }
+
+    function cancelNewBoard() {
+        document.getElementById("windowPrompt").style.visibility = "hidden";
+        document.getElementById("newBoardPropertiesWindow").style.visibility = "hidden";
+        document.getElementById("boardNameEntry").value = "";
+    }
+</script>
+ 
