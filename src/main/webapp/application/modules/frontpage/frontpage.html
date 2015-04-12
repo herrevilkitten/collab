@@ -8,7 +8,9 @@
             </div>
         </div>
         <div class="boardContentContent" id="savedBoardContet">
-            
+            <div ng-repeat="whiteboard in whiteboards">
+                <a ng-href="board/{{whiteboard.id}}">Whiteboard #{{whiteboard.id}}</a>
+            </div>
         </div>
     </div>
     <div id="sharedBoardsContainer">
@@ -39,7 +41,7 @@
         </div>
         <div id="buttonContainer">
             <button id="cancelNewBoardButton" onclick="cancelNewBoard()">Cancel</button>
-            <button id="okNewBoardButton">OK</button>
+            <button id="okNewBoardButton" ng-click="createWhiteboard()">OK</button>
         </div>
     </div>
 </div>
