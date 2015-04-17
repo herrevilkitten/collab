@@ -125,6 +125,9 @@
                 $scope.canvas = SVG('canvas').size(1920, 1080);
                 $scope.toolboxSide = 'left';
                 $scope.command = {
+                    home: function() {
+                        $location.path('/home');
+                    },
                     clear: function() {
                         if (window.confirm('Clear the drawing?')) {
                             $scope.canvas.clear();

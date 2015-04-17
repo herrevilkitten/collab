@@ -48,6 +48,9 @@
   <div id="selectToolbox" class="toolbox" ng-show="mode === 's'">Select</div>
   <div id="commandToolbox" class="toolbox" ng-show="mode === 'c'">
     <div class="btn-group-vertical">
+      <button type="button" class="btn btn-primary" ng-click="command.home()">
+        <i title="Home" class="fa fa-home"></i>
+      </button>
       <button type="button" class="btn btn-primary" ng-click="command.clear()">
         <i title="Clear" class="fa fa-trash-o"></i>
       </button>

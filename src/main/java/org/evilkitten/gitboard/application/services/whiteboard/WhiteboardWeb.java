@@ -48,9 +48,9 @@ public class WhiteboardWeb {
     @POST
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create() {
-        LOG.info("User {} creating new board", currentUser.get());
-        Whiteboard board = whiteboardDao.create(currentUser.get());
+    public Response create(NewWhiteboard newWhiteboard) {
+        LOG.info("User {} creating new board: {}", currentUser.get(), newWhiteboard);
+        Whiteboard board = whiteboardDao.create(currentUser.get(), newWhiteboard.getName());
         return Response.status(Response.Status.CREATED).entity(board).build();
     }
 

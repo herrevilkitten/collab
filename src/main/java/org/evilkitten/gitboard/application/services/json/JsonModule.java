@@ -6,6 +6,6 @@ import com.google.inject.Singleton;
 public class JsonModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(JsonEncoder.class).to(JacksonJsonEncoder.class).in(Singleton.class);
+        bind(JsonTranscoder.class).to(JacksonJsonTranscoder.class).in(Singleton.class);
     }
 }

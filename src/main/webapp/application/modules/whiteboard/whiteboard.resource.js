@@ -11,8 +11,8 @@
                 list: function() {
                     return $http.get(baseUrl + '/byUser');
                 },
-                create: function() {
-                    return $http.post(baseUrl + '/create');
+                create: function(name) {
+                    return $http.post(baseUrl + '/create', {name: name});
                 }
             };
         })

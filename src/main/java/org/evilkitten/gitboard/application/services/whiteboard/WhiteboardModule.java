@@ -12,7 +12,7 @@ public class WhiteboardModule extends AbstractModule {
     protected void configure() {
         LOG.info("Configuring WhiteboardModule");
 
-        bind(Whiteboard.class).in(Singleton.class);
+        bind(WhiteboardService.class).to(DefaultWhiteboardService.class);
         bind(WhiteboardDao.class).to(PostgresqlWhiteboardDao.class);
         bind(WhiteboardTasks.class).in(Singleton.class);
     }
