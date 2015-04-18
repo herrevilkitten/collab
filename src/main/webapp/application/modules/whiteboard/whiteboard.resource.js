@@ -11,6 +11,9 @@
                 list: function() {
                     return $http.get(baseUrl + '/byUser');
                 },
+                listShared: function() {
+                    return $http.get(baseUrl + '/byAccess');
+                },
                 create: function(name) {
                     return $http.post(baseUrl + '/create', {name: name});
                 }

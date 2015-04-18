@@ -7,19 +7,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 
 @XmlRootElement
 @Data
+@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.PROPERTY, property = "type")
 abstract public class GitboardMessage {
     private final Calendar timestamp = GregorianCalendar.getInstance();
     private Integer boardId;
-
-    @JsonIgnore
-    private String type;
-
-    @JsonProperty("type")
-    public String getType() {
-        return getClass().getSimpleName().replace("Message", "").toLowerCase();
-    }
 }

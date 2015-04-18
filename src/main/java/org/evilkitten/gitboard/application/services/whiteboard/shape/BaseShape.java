@@ -1,5 +1,7 @@
 package org.evilkitten.gitboard.application.services.whiteboard.shape;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 
@@ -8,4 +10,5 @@ import lombok.Data;
 abstract public class BaseShape {
     private int id;
     private String stroke;
+    private Date creationTime;
 }

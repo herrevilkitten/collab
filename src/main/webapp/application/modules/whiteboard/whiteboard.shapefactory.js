@@ -24,7 +24,7 @@
                         return angular.extend({}, BASE_SHAPE, {
                             type: '.PathShape',
                             segments: segments,
-                            stroke: object.stroke
+                            stroke: object._stroke
                         });
                     },
 

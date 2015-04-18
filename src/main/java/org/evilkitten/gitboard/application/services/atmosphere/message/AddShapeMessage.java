@@ -6,6 +6,6 @@ import org.evilkitten.gitboard.application.services.whiteboard.shape.BaseShape;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class AddShapeActionMessage extends ActionMessage {
+public class AddShapeMessage extends ActionMessage {
     private BaseShape shape;
 }

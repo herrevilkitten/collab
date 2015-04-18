@@ -27,85 +27,160 @@
                                                      MessageFactory,
                                                      ShapeFactory,
                                                      SocketFactory) {
+            function addShape(shape) {
+                var segments;
+                window.console.log('Adding', shape, 'from welcome');
 
-            function onMessage(socket, response, message) {
-                var i,
-                    actions,
-                    action,
-                    segments;
+                switch (shape.type) {
+                case '.PathShape':
+                    segments = shape.segments.map(function(segment) {
+                        return segment.type + segment.position.x + ' ' + segment.position.y
+                    }).join('');
 
-                if (message.type === 'welcome') {
-                    $scope.uuid = message.uuid;
-                    actions = message.actions;
-                    if (actions !== null && actions.length > 0) {
-                        for (i = 0; i < actions.length; ++i) {
-                            action = actions[i];
-                            var actionType = action.type.substring(7);
-                            window.console.log('Adding', actionType, 'from welcome: ', action);
-                            switch (actionType) {
-                            case 'path':
-                                segments = action.object.segments.map(function(item) {
-                                    return item.type + item.position.x + ' ' + item.position.y
-                                }).join('');
-                                window.console.log('Segments', segments);
-                                $scope.canvas.path(segments).attr({
-                                    fill: 'none',
-                                    stroke: action.object.stroke,
-                                    'stroke-width': 1
-                                });
-                                break;
-                            case 'rect':
-                                $scope.canvas.rect(action.object.dimensions.width, action.object.dimensions.height)
-                                    .move(action.object.position.x, action.object.position.y)
-                                    .attr({
-                                        fill: action.object.fill,
-                                        stroke: action.object.stroke
-                                    });
-                                break;
-                            case 'ellipse':
-                                $scope.canvas.ellipse(action.object.dimensions.width, action.object.dimensions.height)
-                                    .move(action.object.position.x, action.object.position.y)
-                                    .attr({
-                                        fill: action.object.fill,
-                                        stroke: action.object.stroke
-                                    });
-                                break;
-                            }
-                        }
-                    }
-                } else if (message.type.substring(0, 7) === 'action.' && message.author !== $scope.uuid) {
-                    actionType = message.type.substring(7);
-                    window.console.log('Adding action ', actionType, 'from ', message.author);
-                    switch (actionType) {
-                    case 'path':
-                        segments = message.segments.map(function(item) {
-                            return item.type + item.position.x + ' ' + item.position.y
-                        }).join('');
-                        window.console.log('Segments', segments);
-                        $scope.canvas.path(segments).attr({
-                            fill: 'none',
-                            stroke: message.stroke,
+                    window.console.log('Segments', segments);
+
+                    $scope.canvas.path(segments).attr({
+                        fill: 'none',
+                        stroke: shape.stroke,
+                        'stroke-width': 1
+                    });
+                    break;
+
+                case '.LineShape':
+                    $scope.canvas.line(shape.start.x, shape.start.y, shape.end.x, shape.end.y)
+                        .attr({
+                            stroke: shape.stroke,
                             'stroke-width': 1
                         });
-                        break;
-                    case 'rect':
-                        $scope.canvas.rect(message.dimensions.width, message.dimensions.height)
-                            .move(message.position.x, message.position.y)
-                            .attr({
-                                fill: message.fill,
-                                stroke: message.stroke
-                            });
-                        break;
-                    case 'ellipse':
-                        $scope.canvas.ellipse(message.dimensions.width, message.dimensions.height)
-                            .move(message.position.x, message.position.y)
-                            .attr({
-                                fill: message.fill,
-                                stroke: message.stroke
-                            });
-                        break;
-                    }
+                    break;
+
+                case '.RectangleShape':
+                    $scope.canvas.rect(shape.dimensions.width, shape.dimensions.height)
+                        .move(shape.position.x, shape.position.y)
+                        .attr({
+                            fill: shape.fill,
+                            stroke: shape.stroke
+                        });
+                    break;
+
+                case '.EllipseShape':
+                    $scope.canvas.ellipse(shape.dimensions.width, shape.dimensions.height)
+                        .move(shape.position.x, shape.position.y)
+                        .attr({
+                            fill: shape.fill,
+                            stroke: shape.stroke
+                        });
+                    break;
                 }
+            }
+
+            function onWelcomeMessage(socket, response, message) {
+                $scope.uuid = message.uuid;
+                $scope.user.id = message.user.id;
+                angular.forEach(message.whiteboard.shapes, addShape);
+            }
+
+            function onAddShapeMessage(socket, response, message) {
+                if (message.actor.id == $scope.user.id) {
+                    // Since the database assigns shape ids, update the id and return
+                    // so it doesn't draw twice
+                    return;
+                }
+
+                // Add the shape to the board
+                angular.forEach([message.shape], addShape);
+
+            }
+
+            var messageHandlers = {
+                '.WelcomeMessage': onWelcomeMessage,
+                '.AddShapeMessage': onAddShapeMessage
+            };
+
+
+            function onMessage(socket, response, message) {
+                var handler,
+                    type;
+
+                console.log('onMessage', message);
+                handler = messageHandlers[message.type];
+                if (handler) {
+                    handler(socket, response, message);
+                }
+                /*
+                 if (message.type === 'welcome') {
+                 $scope.uuid = message.uuid;
+                 actions = message.actions;
+                 if (actions !== null && actions.length > 0) {
+                 for (i = 0; i < actions.length; ++i) {
+                 action = actions[i];
+                 var actionType = action.type.substring(7);
+                 window.console.log('Adding', actionType, 'from welcome: ', action);
+                 switch (actionType) {
+                 case 'path':
+                 segments = action.object.segments.map(function(item) {
+                 return item.type + item.position.x + ' ' + item.position.y
+                 }).join('');
+                 window.console.log('Segments', segments);
+                 $scope.canvas.path(segments).attr({
+                 fill: 'none',
+                 stroke: action.object.stroke,
+                 'stroke-width': 1
+                 });
+                 break;
+                 case 'rect':
+                 $scope.canvas.rect(action.object.dimensions.width, action.object.dimensions.height)
+                 .move(action.object.position.x, action.object.position.y)
+                 .attr({
+                 fill: action.object.fill,
+                 stroke: action.object.stroke
+                 });
+                 break;
+                 case 'ellipse':
+                 $scope.canvas.ellipse(action.object.dimensions.width, action.object.dimensions.height)
+                 .move(action.object.position.x, action.object.position.y)
+                 .attr({
+                 fill: action.object.fill,
+                 stroke: action.object.stroke
+                 });
+                 break;
+                 }
+                 }
+                 }
+                 } else if (message.type.substring(0, 7) === 'action.' && message.author !== $scope.uuid) {
+                 actionType = message.type.substring(7);
+                 window.console.log('Adding action ', actionType, 'from ', message.author);
+                 switch (actionType) {
+                 case 'path':
+                 segments = message.segments.map(function(item) {
+                 return item.type + item.position.x + ' ' + item.position.y
+                 }).join('');
+                 window.console.log('Segments', segments);
+                 $scope.canvas.path(segments).attr({
+                 fill: 'none',
+                 stroke: message.stroke,
+                 'stroke-width': 1
+                 });
+                 break;
+                 case 'rect':
+                 $scope.canvas.rect(message.dimensions.width, message.dimensions.height)
+                 .move(message.position.x, message.position.y)
+                 .attr({
+                 fill: message.fill,
+                 stroke: message.stroke
+                 });
+                 break;
+                 case 'ellipse':
+                 $scope.canvas.ellipse(message.dimensions.width, message.dimensions.height)
+                 .move(message.position.x, message.position.y)
+                 .attr({
+                 fill: message.fill,
+                 stroke: message.stroke
+                 });
+                 break;
+                 }
+                 }
+                 */
             }
 
             try {
@@ -117,6 +192,7 @@
                     }
                 };
                 $scope.boardId = CurrentBoard;
+                $scope.user = {id: 0};
                 $scope.selected = null;
                 $scope.uuid = null;
                 $scope.mode = MODE_DRAWING;
@@ -387,7 +463,7 @@
                         shape = ShapeFactory.createEllipse(action);
                         break;
                     }
-                    message = MessageFactory.createAddShapeAction(shape);
+                    message = MessageFactory.createAddShape(shape);
                     $scope.socket.publish(message);
                 };
 
@@ -400,10 +476,6 @@
                     .onMessage(onMessage)
                     .onError(SocketFactory.reconnectOnErrorHandler)
                     .open();
-
-                $timeout(function() {
-                    $scope.socket.publish(MessageFactory.createQuery());
-                }, 1000);
             } catch (e) {
                 window.console.error(e);
             }

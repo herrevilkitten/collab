@@ -1,8 +1,7 @@
 package org.evilkitten.gitboard.application.database.query;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public interface RowMapper<T> {
-    T mapRow(ResultSet resultSet) throws SQLException;
+    T mapRow(UncheckedResultSet resultSet) throws SQLException;
 }

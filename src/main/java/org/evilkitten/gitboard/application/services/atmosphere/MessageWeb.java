@@ -1,27 +1,22 @@
 package org.evilkitten.gitboard.application.services.atmosphere;
 
-import java.util.UUID;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServlet;
 
 import org.atmosphere.config.service.Disconnect;
 import org.atmosphere.config.service.ManagedService;
-import org.atmosphere.config.service.Message;
 import org.atmosphere.config.service.Post;
 import org.atmosphere.config.service.Ready;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.evilkitten.gitboard.application.entity.User;
 import org.evilkitten.gitboard.application.services.atmosphere.message.ActionMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.AddShapeActionMessage;
+import org.evilkitten.gitboard.application.services.atmosphere.message.AddShapeMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.GitboardMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.HeartbeatMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.QueryMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.WelcomeMessage;
+import org.evilkitten.gitboard.application.services.json.JsonTranscoder;
 import org.evilkitten.gitboard.application.services.whiteboard.Whiteboard;
-import org.evilkitten.gitboard.application.services.whiteboard.WhiteboardAddAction;
 import org.evilkitten.gitboard.application.services.whiteboard.WhiteboardService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,26 +27,31 @@ public class MessageWeb extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(MessageWeb.class);
 
     private final WhiteboardService whiteboardService;
+    private final JsonTranscoder jsonTranscoder;
 
     @Inject
-    public MessageWeb(WhiteboardService whiteboardService) {
-        LOG.info("Creating new MessageWeb");
+    public MessageWeb(WhiteboardService whiteboardService, JsonTranscoder jsonTranscoder) {
         this.whiteboardService = whiteboardService;
+        this.jsonTranscoder = jsonTranscoder;
     }
 
     @Ready(encoders = {JacksonEncoder.class})
     public WelcomeMessage onReady(final AtmosphereResource resource) {
+        User user = (User) resource.session().getAttribute("session.user");
         String broadcasterId = resource.getBroadcaster().getID();
-        LOG.info("Browser {} connected to {}", resource.uuid(), broadcasterId);
+        LOG.info("Browser {} ({}) connected to {}", resource.uuid(), user, broadcasterId);
 
         // "/chat/7777"
         int boardId = Integer.parseInt(broadcasterId.substring(6));
         Whiteboard whiteboard = whiteboardService.getById(boardId);
 
         WelcomeMessage wm = new WelcomeMessage();
+        wm.setUser(user);
         wm.setBoardId(boardId);
         wm.setUuid(resource.uuid());
         wm.getActions().addAll(whiteboard.getActions());
+        wm.setWhiteboard(whiteboard);
+
         return wm;
     }
 
@@ -66,35 +66,23 @@ public class MessageWeb extends HttpServlet {
 
     @Post
     public void onPost(AtmosphereResource resource) {
-        resource.session().getAttribute("session.user");
+        User user = (User) resource.session().getAttribute("session.user");
+        String json = resource.getRequest().body().asString();
+
+        GitboardMessage message = (GitboardMessage) jsonTranscoder.fromJson(json, GitboardMessage.class);
+        if (message instanceof ActionMessage) {
+            ((ActionMessage) message).setActor(user);
+        }
 
         LOG.info("Last session access for {}: {}", resource.uuid(), resource.session().getLastAccessedTime());
-        LOG.info("Message is {}", resource.getRequest().body().asString());
-    }
-
-    @Message(encoders = {JacksonEncoder.class}, decoders = {JacksonDecoder.class})
-    public GitboardMessage onMessage(AtmosphereResource resource, GitboardMessage message) {
-        User user = (User) resource.session().getAttribute("session.user");
-        Whiteboard whiteboard = whiteboardService.getById(message.getBoardId());
+        LOG.info("Json is    {}", resource.getRequest().body().asString());
+        LOG.info("Message is {}", message);
         LOG.info("{} sent [#{} {}] {}", user, message.getBoardId(),
-            message.getType(), message.toString());
-        if (message instanceof HeartbeatMessage) {
-            return null;
-        } else if (message instanceof QueryMessage) {
-            ((QueryMessage) message).getActions().addAll(whiteboard.getActions());
-        } else if (message instanceof ActionMessage) {
-            if (message instanceof AddShapeActionMessage) {
-                whiteboardService.addShapeToWhiteboard(((AddShapeActionMessage) message).getShape(), whiteboard);
-            }
-            WhiteboardAddAction wbAction = new WhiteboardAddAction();
-            wbAction.setId(UUID.randomUUID().toString());
-            wbAction.setActor(user);
-            wbAction.setType(message.getType());
-            wbAction.setObject((ActionMessage) message);
-
-            whiteboard.getActions().add(wbAction);
-            LOG.info("Action: {}", message);
+            message.getClass().getSimpleName(), message.toString());
+        Whiteboard whiteboard = whiteboardService.getRawById(message.getBoardId());
+        if (message instanceof AddShapeMessage) {
+            whiteboardService.addShapeToWhiteboard(((AddShapeMessage) message).getShape(), whiteboard);
+            resource.getBroadcaster().broadcast(jsonTranscoder.toJson(message));
         }
-        return message;
     }
 }

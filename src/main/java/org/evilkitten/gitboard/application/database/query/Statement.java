@@ -182,7 +182,7 @@ public class Statement {
     public <T> List<T> queryForRows(DataSource dataSource, RowMapper<? extends T> rowMapper) {
         try (Connection connection = dataSource.getConnection()) {
 
-            ResultSet resultSet = executeQuery(connection);
+            UncheckedResultSet resultSet = new UncheckedResultSet(executeQuery(connection));
             List<T> results = new ArrayList<>();
             while (resultSet.next()) {
                 results.add(rowMapper.mapRow(resultSet));

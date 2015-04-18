@@ -1,9 +1,9 @@
 package org.evilkitten.gitboard.application.services.whiteboard;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.evilkitten.gitboard.application.database.query.RowMapper;
+import org.evilkitten.gitboard.application.database.query.UncheckedResultSet;
 import org.evilkitten.gitboard.application.services.user.UserService;
 
 public class WhiteboardRowMapper implements RowMapper<Whiteboard> {
@@ -14,7 +14,7 @@ public class WhiteboardRowMapper implements RowMapper<Whiteboard> {
     }
 
     @Override
-    public Whiteboard mapRow(ResultSet resultSet) throws SQLException {
+    public Whiteboard mapRow(UncheckedResultSet resultSet) throws SQLException {
         Whiteboard whiteboard = new Whiteboard();
 
         whiteboard.setId(resultSet.getInt("id"));

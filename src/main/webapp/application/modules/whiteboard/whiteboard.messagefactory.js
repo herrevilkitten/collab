@@ -11,11 +11,18 @@
                     }
                 },
                 messages = {
-                    createAddShapeAction: function(shape) {
+                    createAddShape: function(shape) {
                         return angular.extend({}, BASE_MESSAGE, {
-                            type: MESSAGE_PACKAGE + '.AddShapeActionMessage',
+                            type: MESSAGE_PACKAGE + '.AddShapeMessage',
                             boardId: CurrentBoard,
                             shape: shape
+                        });
+                    },
+
+                    createRemoveShape: function(shapeId) {
+                        return angular.extend({}, BASE_MESSAGE, {
+                            type: MESSAGE_PACKAGE + '.RemoveShapeMessage',
+                            shapeId: shapeId
                         });
                     },
 

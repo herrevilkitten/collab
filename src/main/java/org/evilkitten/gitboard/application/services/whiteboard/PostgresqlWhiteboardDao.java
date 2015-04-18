@@ -55,6 +55,14 @@ public class PostgresqlWhiteboardDao implements WhiteboardDao {
     }
 
     @Override
+    public List<Whiteboard> getAllByAccess(User user) {
+        Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.getAllByAccess"));
+
+        statement.set("userId", user.getId());
+        return statement.queryForRows(dataSource, new WhiteboardRowMapper(userService));
+    }
+
+    @Override
     public Whiteboard create(User creator, String name) {
         Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.create"));
         statement.set("creator", creator.getId());
