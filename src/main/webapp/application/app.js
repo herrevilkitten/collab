@@ -4,8 +4,8 @@
     console.log('Setting up application modules');
     angular.module('gitboard.modules', [
         'gitboard.frontpage',
-        'gitboard.whiteboard',
-        'gitboard.user'
+        'gitboard.user',
+        'gitboard.whiteboard'
     ]);
 
     console.log('Setting up angular application');

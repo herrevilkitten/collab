@@ -57,6 +57,9 @@
 <!-- Whiteboard -->
 <script src="application/modules/whiteboard/whiteboard.module.js"></script>
 <script src="application/modules/whiteboard/whiteboard.controller.js"></script>
+<script src="application/modules/whiteboard/whiteboard.messagefactory.js"></script>
+<script src="application/modules/whiteboard/whiteboard.socketfactory.js"></script>
 <script src="application/modules/whiteboard/whiteboard.resource.js"></script>
+<script src="application/modules/whiteboard/whiteboard.shapefactory.js"></script>
 </body>
 </html>

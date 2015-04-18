@@ -5,9 +5,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.evilkitten.gitboard.application.entity.User;
-import org.evilkitten.gitboard.application.services.atmosphere.message.ShapeActionMessage;
+import org.evilkitten.gitboard.application.services.whiteboard.shape.BaseShape;
 
-public class DefaultWhiteboardService {
+public class DefaultWhiteboardService implements WhiteboardService {
     private final WhiteboardDao whiteboardDao;
 
     @Inject
@@ -16,19 +16,29 @@ public class DefaultWhiteboardService {
         this.whiteboardDao = whiteboardDao;
     }
 
-    public Whiteboard getById(Integer id) {
+    @Override
+    public Whiteboard getRawById(Integer id) {
         return whiteboardDao.getById(id);
     }
 
+    public Whiteboard getById(Integer id) {
+        Whiteboard whiteboard = getRawById(id);
+        whiteboard.getShapes().addAll(whiteboardDao.getShapesForWhiteboard(id));
+        return whiteboard;
+    }
+
+    @Override
     public List<Whiteboard> getAllByCreator(User creator) {
         return whiteboardDao.getAllByCreator(creator);
     }
 
-    public Whiteboard create(User creator) {
-        return whiteboardDao.create(creator);
+    @Override
+    public Whiteboard create(User creator, String name) {
+        return whiteboardDao.create(creator, name);
     }
 
-    public void addShape(Whiteboard whiteboard, ShapeActionMessage action) {
-
+    @Override
+    public BaseShape addShapeToWhiteboard(BaseShape shape, Whiteboard whiteboard) {
+        return whiteboardDao.addShapeToWhiteboard(shape, whiteboard);
     }
 }

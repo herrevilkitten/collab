@@ -18,6 +18,11 @@ public class WhiteboardRowMapper implements RowMapper<Whiteboard> {
         Whiteboard whiteboard = new Whiteboard();
 
         whiteboard.setId(resultSet.getInt("id"));
+        String name = resultSet.getString("boardName");
+        if (name == null || name.isEmpty()) {
+            name = "Whiteboard #" + whiteboard.getId();
+        }
+        whiteboard.setName(name);
         whiteboard.setCreator(userService.getById(resultSet.getInt("creatorId")));
         whiteboard.setCreationTime(resultSet.getDate("creationTime"));
 

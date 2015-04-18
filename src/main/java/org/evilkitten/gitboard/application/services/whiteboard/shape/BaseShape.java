@@ -1,0 +1,11 @@
+package org.evilkitten.gitboard.application.services.whiteboard.shape;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Data;
+
+@Data
+@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.PROPERTY, property = "type")
+abstract public class BaseShape {
+    private int id;
+    private String stroke;
+}

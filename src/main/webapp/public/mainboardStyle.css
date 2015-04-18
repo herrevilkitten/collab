@@ -1,0 +1,96 @@
+﻿body {
+}
+
+div#layersWindow{
+    position:absolute;
+    z-index:2;
+    visibility:visible;
+
+    width:250px;
+    height:300px;
+    top:500px;
+    left:300px;
+    padding-top:2px;
+    padding-left:4px;
+    padding-right:4px;
+    padding-bottom:4px;
+
+    background: #3366FF;
+}
+
+div#layerHeader{
+    position:relative;
+
+    width: 100%;
+    height: 25px;
+}
+
+div#layerContent{
+    width:100%;
+    height:270px;
+
+    background: white;
+}
+
+div#layerTable{
+    width:100%;
+    height:240px;
+
+    overflow-y:scroll;
+}
+
+div#layerToolbar{
+    width:100%;
+    height:30px;
+
+    border-top: 1px solid gray;
+}
+
+div.layerRow{
+    width:100%;
+    height:40px;
+
+    border-bottom: 1px solid grey;
+}
+
+div.layerName{
+    font-size: 15px;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+div.layerCol{
+    float:left;
+}
+
+span#layerTitle{
+    margin-left: 20px;
+    margin-top: 8px;
+
+    color: white;
+}
+
+img#closeIcon{
+    width:20px;
+    height: 20px;
+    float: right;
+}
+img#closeIcon:hover{
+    cursor:pointer;
+    background: red;
+}
+
+img#addNewLayer{
+    float: right;
+    margin-top: 2px;
+    margin-right:2px;
+}
+img#addNewLayer:hover{
+    background: grey;
+}
+img#layerVisibilityButton{
+    width: 35px;
+    height: 35px;
+}
+img#layerVisibilityButton:hover{
+    cursor:pointer;
+}

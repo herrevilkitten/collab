@@ -12,19 +12,30 @@ import org.evilkitten.gitboard.application.database.query.Statement;
 import org.evilkitten.gitboard.application.database.query.StatementException;
 import org.evilkitten.gitboard.application.database.query.UncheckedResultSet;
 import org.evilkitten.gitboard.application.entity.User;
-import org.evilkitten.gitboard.application.services.atmosphere.message.ShapeActionMessage;
+import org.evilkitten.gitboard.application.services.json.JsonTranscoder;
 import org.evilkitten.gitboard.application.services.user.UserService;
+import org.evilkitten.gitboard.application.services.whiteboard.shape.BaseShape;
+import org.evilkitten.gitboard.application.services.whiteboard.shape.ShapeRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PostgresqlWhiteboardDao implements WhiteboardDao {
+    private static final Logger LOG = LoggerFactory.getLogger(PostgresqlWhiteboardDao.class);
+
     private final Config config;
     private final DataSource dataSource;
     private final UserService userService;
+    private final JsonTranscoder jsonTranscoder;
 
     @Inject
-    public PostgresqlWhiteboardDao(Config config, DataSource dataSource, UserService userService) {
+    public PostgresqlWhiteboardDao(Config config,
+                                   DataSource dataSource,
+                                   UserService userService,
+                                   JsonTranscoder jsonTranscoder) {
         this.config = config;
         this.dataSource = dataSource;
         this.userService = userService;
+        this.jsonTranscoder = jsonTranscoder;
     }
 
     @Override
@@ -44,9 +55,10 @@ public class PostgresqlWhiteboardDao implements WhiteboardDao {
     }
 
     @Override
-    public Whiteboard create(User creator) {
+    public Whiteboard create(User creator, String name) {
         Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.create"));
         statement.set("creator", creator.getId());
+        statement.set("name", name);
 
         try (Connection connection = dataSource.getConnection()) {
             UncheckedResultSet resultSet = statement.updateAndReturn(connection, "id");
@@ -60,7 +72,31 @@ public class PostgresqlWhiteboardDao implements WhiteboardDao {
         }
     }
 
-    public void addShapeToWhiteboard(ShapeActionMessage shape, Whiteboard whiteboard) {
+    @Override
+    public BaseShape addShapeToWhiteboard(BaseShape shape, Whiteboard whiteboard) {
+        Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.addShapeToWhiteboard"));
+        statement.set("board", whiteboard.getId());
 
+        LOG.info("Shape is: {}", shape);
+        statement.set("json", jsonTranscoder.toJson(shape));
+
+        try (Connection connection = dataSource.getConnection()) {
+            UncheckedResultSet resultSet = statement.updateAndReturn(connection, "id");
+            if (resultSet.next()) {
+                shape.setId(resultSet.getInt("id"));
+                return shape;
+            } else {
+                throw new StatementException("updateAndReturn did not return a ResultSet");
+            }
+        } catch (SQLException e) {
+            throw new StatementException(e);
+        }
+    }
+
+    @Override
+    public List<BaseShape> getShapesForWhiteboard(Integer id) {
+        Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.getShapesForWhiteboard"));
+        statement.set("board", id);
+        return statement.queryForRows(dataSource, new ShapeRowMapper(jsonTranscoder));
     }
 }

@@ -5,6 +5,8 @@ import java.util.GregorianCalendar;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @XmlRootElement
@@ -12,7 +14,12 @@ import lombok.Data;
 abstract public class GitboardMessage {
     private final Calendar timestamp = GregorianCalendar.getInstance();
     private Integer boardId;
-    private String message;
 
-    abstract public String getType();
+    @JsonIgnore
+    private String type;
+
+    @JsonProperty("type")
+    public String getType() {
+        return getClass().getSimpleName().replace("Message", "").toLowerCase();
+    }
 }
