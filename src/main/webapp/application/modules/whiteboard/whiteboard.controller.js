@@ -17,7 +17,7 @@
         KEY_CONTROL = 17;
 
     angular.module('gitboard.whiteboard')
-        .controller('WhiteBoardController', function($scope,
+        .controller('WhiteBoardController', function ($scope,
                                                      $http,
                                                      $interval,
                                                      $location,
@@ -43,33 +43,33 @@
                             var actionType = action.type.substring(7);
                             window.console.log('Adding', actionType, 'from welcome: ', action);
                             switch (actionType) {
-                            case 'path':
-                                segments = action.object.segments.map(function(item) {
-                                    return item.type + item.position.x + ' ' + item.position.y
-                                }).join('');
-                                window.console.log('Segments', segments);
-                                $scope.canvas.path(segments).attr({
-                                    fill: 'none',
-                                    stroke: action.object.stroke,
-                                    'stroke-width': 1
-                                });
-                                break;
-                            case 'rect':
-                                $scope.canvas.rect(action.object.dimensions.width, action.object.dimensions.height)
-                                    .move(action.object.position.x, action.object.position.y)
-                                    .attr({
-                                        fill: action.object.fill,
-                                        stroke: action.object.stroke
+                                case 'path':
+                                    segments = action.object.segments.map(function (item) {
+                                        return item.type + item.position.x + ' ' + item.position.y
+                                    }).join('');
+                                    window.console.log('Segments', segments);
+                                    $scope.canvas.path(segments).attr({
+                                        fill: 'none',
+                                        stroke: action.object.stroke,
+                                        'stroke-width': 1
                                     });
-                                break;
-                            case 'ellipse':
-                                $scope.canvas.ellipse(action.object.dimensions.width, action.object.dimensions.height)
-                                    .move(action.object.position.x, action.object.position.y)
-                                    .attr({
-                                        fill: action.object.fill,
-                                        stroke: action.object.stroke
-                                    });
-                                break;
+                                    break;
+                                case 'rect':
+                                    $scope.canvas.rect(action.object.dimensions.width, action.object.dimensions.height)
+                                        .move(action.object.position.x, action.object.position.y)
+                                        .attr({
+                                            fill: action.object.fill,
+                                            stroke: action.object.stroke
+                                        });
+                                    break;
+                                case 'ellipse':
+                                    $scope.canvas.ellipse(action.object.dimensions.width, action.object.dimensions.height)
+                                        .move(action.object.position.x, action.object.position.y)
+                                        .attr({
+                                            fill: action.object.fill,
+                                            stroke: action.object.stroke
+                                        });
+                                    break;
                             }
                         }
                     }
@@ -77,33 +77,33 @@
                     actionType = message.type.substring(7);
                     window.console.log('Adding action ', actionType, 'from ', message.author);
                     switch (actionType) {
-                    case 'path':
-                        segments = message.segments.map(function(item) {
-                            return item.type + item.position.x + ' ' + item.position.y
-                        }).join('');
-                        window.console.log('Segments', segments);
-                        $scope.canvas.path(segments).attr({
-                            fill: 'none',
-                            stroke: message.stroke,
-                            'stroke-width': 1
-                        });
-                        break;
-                    case 'rect':
-                        $scope.canvas.rect(message.dimensions.width, message.dimensions.height)
-                            .move(message.position.x, message.position.y)
-                            .attr({
-                                fill: message.fill,
-                                stroke: message.stroke
+                        case 'path':
+                            segments = message.segments.map(function (item) {
+                                return item.type + item.position.x + ' ' + item.position.y
+                            }).join('');
+                            window.console.log('Segments', segments);
+                            $scope.canvas.path(segments).attr({
+                                fill: 'none',
+                                stroke: message.stroke,
+                                'stroke-width': 1
                             });
-                        break;
-                    case 'ellipse':
-                        $scope.canvas.ellipse(message.dimensions.width, message.dimensions.height)
-                            .move(message.position.x, message.position.y)
-                            .attr({
-                                fill: message.fill,
-                                stroke: message.stroke
-                            });
-                        break;
+                            break;
+                        case 'rect':
+                            $scope.canvas.rect(message.dimensions.width, message.dimensions.height)
+                                .move(message.position.x, message.position.y)
+                                .attr({
+                                    fill: message.fill,
+                                    stroke: message.stroke
+                                });
+                            break;
+                        case 'ellipse':
+                            $scope.canvas.ellipse(message.dimensions.width, message.dimensions.height)
+                                .move(message.position.x, message.position.y)
+                                .attr({
+                                    fill: message.fill,
+                                    stroke: message.stroke
+                                });
+                            break;
                     }
                 }
             }
@@ -112,10 +112,16 @@
                 $scope.color = {
                     foreground: 'rgba(0, 0, 0, 1)',
                     fill: 'rgba(255, 255, 255, 1)',
-                    complementary: function(color) {
+                    complementary: function (color) {
                         return new SVG.Color(color).complementary();
                     }
                 };
+                $scope.layerIsVisible = "public/images/eyeIcon.png";
+                $scope.layerIsInvisible = "public/images/closedEyeIcon.png";
+                $scope.layers = [{ index: 0, name: "default layer", visibile: true, src: $scope.layerIsVisible }];
+                $scope.showLayer = false;/*function(index) {
+                    return false;
+                };*/
                 $scope.boardId = CurrentBoard;
                 $scope.selected = null;
                 $scope.uuid = null;
@@ -125,17 +131,39 @@
                 $scope.canvas = SVG('canvas').size(1920, 1080);
                 $scope.toolboxSide = 'left';
                 $scope.command = {
-                    home: function() {
+                    home: function () {
                         $location.path('/home');
                     },
-                    clear: function() {
+                    clear: function () {
                         if (window.confirm('Clear the drawing?')) {
                             $scope.canvas.clear();
                         }
                         $scope.mode = MODE_DRAWING;
                     },
-                    switchSides: function() {
+                    switchSides: function () {
                         $scope.toolboxSide = ($scope.toolboxSide === 'left') ? 'right' : 'left';
+                    },
+                    closeLayersWindow: function(){
+                        $event.target.css({
+                            visibility: 'hidden'
+                        });
+                    },
+                    addNewLayer: function () {
+                        $scope.layers.push({ index: $scope.layers.length, name: "new Layer " + $scope.layers.length, visible: true, src: $scope.layerIsVisible });
+                    },
+                    changeVisibility: function (index) {
+                        if ($scope.layers[index].src == $scope.layerIsVisible) {
+                            $scope.layers[index].src = $scope.layerIsInvisible;
+                            $scope.layers[index].visibile = false;
+                        }
+                        else {
+                            $scope.layers[index].src = $scope.layerIsVisible;
+                            $scope.layers[index].visibile = true;
+                        }
+
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
                     }
 
                 };
@@ -152,8 +180,8 @@
                     strokes = $scope.strokes,
                     submode = 0;
 
-                $(window).keyup(function(e) {
-                    $scope.$apply(function() {
+                $(window).keyup(function (e) {
+                    $scope.$apply(function () {
                         $log.info('keyUp: ', e);
                         if (e.which === KEY_ESCAPE) {
                             if (shape) {
@@ -169,8 +197,8 @@
                     });
                 });
 
-                svgElement.on('mousemove touchmove', function(e) {
-                    $scope.$apply(function() {
+                svgElement.on('mousemove touchmove', function (e) {
+                    $scope.$apply(function () {
                         var x,
                             y,
                             attr,
@@ -230,7 +258,8 @@
                                     shape.size(width, height);
                                     shape.attr({
                                         fill: $scope.color.fill,
-                                        stroke: $scope.color.foreground
+                                        stroke: $scope.color.foreground,
+                                        class: 'layer' + ($scope.layers.length - 1)
                                     });
                                 } else if ($scope.drawingMode === MODE_DRAWING_OVAL) {
                                     attr = shape.attr();
@@ -250,8 +279,8 @@
                     });
                 });
 
-                svgElement.on('mousedown touchstart', function(e) {
-                    $scope.$apply(function() {
+                svgElement.on('mousedown touchstart', function (e) {
+                    $scope.$apply(function () {
                         var x, y;
                         $log.info('mouseDown:', e);
                         isDown = true;
@@ -350,8 +379,8 @@
                     });
                 });
 
-                svgElement.on('mouseup touchend', function(e) {
-                    $scope.$apply(function() {
+                svgElement.on('mouseup touchend', function (e) {
+                    $scope.$apply(function () {
                         $log.info('mouseUp:', e, $scope.mode);
                         if (shape === null && path === null) {
                             return;
@@ -368,30 +397,30 @@
 
                 });
 
-                $scope.addAction = function(action) {
+                $scope.addAction = function (action) {
                     var shape,
                         message;
 
                     window.console.log('Adding action:', action);
                     switch (action.type) {
-                    case 'path':
-                        shape = ShapeFactory.createPath(action);
-                        break;
-                    case 'line':
-                        shape = ShapeFactory.createLine(action);
-                        break;
-                    case 'rect':
-                        shape = ShapeFactory.createRectangle(action);
-                        break;
-                    case 'ellipse':
-                        shape = ShapeFactory.createEllipse(action);
-                        break;
+                        case 'path':
+                            shape = ShapeFactory.createPath(action);
+                            break;
+                        case 'line':
+                            shape = ShapeFactory.createLine(action);
+                            break;
+                        case 'rect':
+                            shape = ShapeFactory.createRectangle(action);
+                            break;
+                        case 'ellipse':
+                            shape = ShapeFactory.createEllipse(action);
+                            break;
                     }
                     message = MessageFactory.createAddShapeAction(shape);
                     $scope.socket.publish(message);
                 };
 
-                $interval(function() {
+                $interval(function () {
                     $scope.socket.publish(MessageFactory.createHeartbeat());
                 }, 90000);
 
@@ -401,11 +430,40 @@
                     .onError(SocketFactory.reconnectOnErrorHandler)
                     .open();
 
-                $timeout(function() {
+                $timeout(function () {
                     $scope.socket.publish(MessageFactory.createQuery());
                 }, 1000);
             } catch (e) {
                 window.console.error(e);
             }
-        });
+        })
+        .directive("draggableWindow", ['$document', function ($document) {
+            return {
+                link: function (scope, element, attr) {
+                    var startX = 0, startY = 0, x = 300, y = 500;
+
+                    element.on('mousedown', function (event) {
+                        event.preventDefault();
+                        startX = event.screenX - x;
+                        startY = event.screenY - y;
+                        $document.on('mousemove', mousemove);
+                        $document.on('mouseup', mouseup);
+                    });
+
+                    function mousemove(event) {
+                        y = event.screenY - startY;
+                        x = event.screenX - startX;
+                        element.css({
+                            top: y + 'px',
+                            left: x + 'px'
+                        });
+                    }
+
+                    function mouseup() {
+                        $document.off('mousemove', mousemove);
+                        $document.off('mouseup', mouseup);
+                    }
+                }
+            }
+        }]);
 }(window.angular, window.SVG, window.gapi, window.jQuery));

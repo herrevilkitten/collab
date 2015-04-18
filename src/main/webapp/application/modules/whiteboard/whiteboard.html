@@ -57,6 +57,9 @@
       <button type="button" class="btn btn-primary" ng-click="command.switchSides()">
         <i title="Switch Sides" class="fa fa-arrows-h"></i>
       </button>
+        <button type="button" class="btn btn-primary" ng-click="showWindow=true">
+            <i title="Layers Menu" class="fa fa-arrows-h"></i>
+        </button>
     </div>
   </div>
 </div>
@@ -64,3 +67,21 @@
 <ul>
   <li ng-repeat="stroke in strokes">{{stroke}}</li>
 </ul>
+
+<div id="layersWindow" draggable-window ng-show="showWindow">
+    <div id="layerHeader">
+        <span id="layerTitle">Layers</span>
+        <img id="closeIcon" src="public/images/closeIcon.png" ng-click="showWindow=false" />
+    </div>
+    <div id="layerContent">
+        <div id="layerTable">
+            <div class="layerRow" ng-repeat="layer in layers">
+                <div class="layerCol visibilityCol" ng-click="command.changeVisibility(layer.index)"><img id="layerVisibilityButton" src="{{layer.src}}" /></div>
+                <div class="layerCol layerName">{{layer.name}}</div>
+            </div>
+        </div>
+        <div id="layerToolbar">
+            <img id="addNewLayer" src="public/images/addNewLayer.png" ng-click="command.addNewLayer()" / >
+        </div>
+    </div>
+</div>
