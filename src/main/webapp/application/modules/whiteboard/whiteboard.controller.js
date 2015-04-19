@@ -40,7 +40,7 @@
 
                     window.console.log('Segments', segments);
 
-                    $scope.canvas.path(segments).attr({
+                    $scope.canvas.children()[$scope.currentLayer].path(segments).attr({
                         fill: 'none',
                         stroke: shape.stroke,
                         'stroke-width': 1,
@@ -49,7 +49,7 @@
                     break;
 
                 case '.LineShape':
-                    $scope.canvas.line(shape.start.x, shape.start.y, shape.end.x, shape.end.y)
+                    $scope.canvas.children()[$scope.currentLayer].line(shape.start.x, shape.start.y, shape.end.x, shape.end.y)
                         .attr({
                             stroke: shape.stroke,
                             'stroke-width': 1,
@@ -58,17 +58,18 @@
                     break;
 
                 case '.RectangleShape':
-                    $scope.canvas.rect(shape.dimensions.width, shape.dimensions.height)
+                    $scope.canvas.children()[$scope.currentLayer].rect(shape.dimensions.width, shape.dimensions.height)
                         .move(shape.position.x, shape.position.y)
                         .attr({
                             fill: shape.fill,
                             stroke: shape.stroke,
-                            '__id': shape.id
+                            '__id': shape.id,
+							'class': 'layer' + $scope.currentLayer
                         });
                     break;
 
                 case '.EllipseShape':
-                    $scope.canvas.ellipse(shape.dimensions.width, shape.dimensions.height)
+                    $scope.canvas.children()[$scope.currentLayer].ellipse(shape.dimensions.width, shape.dimensions.height)
                         .move(shape.position.x, shape.position.y)
                         .attr({
                             fill: shape.fill,
@@ -113,80 +114,6 @@
                 if (handler) {
                     handler(socket, response, message);
                 }
-                /*
-                 if (message.type === 'welcome') {
-                 $scope.uuid = message.uuid;
-                 actions = message.actions;
-                 if (actions !== null && actions.length > 0) {
-                 for (i = 0; i < actions.length; ++i) {
-                 action = actions[i];
-                 var actionType = action.type.substring(7);
-                 window.console.log('Adding', actionType, 'from welcome: ', action);
-                 switch (actionType) {
-                 case 'path':
-                 segments = action.object.segments.map(function(item) {
-                 return item.type + item.position.x + ' ' + item.position.y
-                 }).join('');
-                 window.console.log('Segments', segments);
-                 $scope.canvas.path(segments).attr({
-                 fill: 'none',
-                 stroke: action.object.stroke,
-                 'stroke-width': 1
-                 });
-                 break;
-                 case 'rect':
-                 $scope.canvas.rect(action.object.dimensions.width, action.object.dimensions.height)
-                 .move(action.object.position.x, action.object.position.y)
-                 .attr({
-                 fill: action.object.fill,
-                 stroke: action.object.stroke
-                 });
-                 break;
-                 case 'ellipse':
-                 $scope.canvas.ellipse(action.object.dimensions.width, action.object.dimensions.height)
-                 .move(action.object.position.x, action.object.position.y)
-                 .attr({
-                 fill: action.object.fill,
-                 stroke: action.object.stroke
-                 });
-                 break;
-                 }
-                 }
-                 }
-                 } else if (message.type.substring(0, 7) === 'action.' && message.author !== $scope.uuid) {
-                 actionType = message.type.substring(7);
-                 window.console.log('Adding action ', actionType, 'from ', message.author);
-                 switch (actionType) {
-                 case 'path':
-                 segments = message.segments.map(function(item) {
-                 return item.type + item.position.x + ' ' + item.position.y
-                 }).join('');
-                 window.console.log('Segments', segments);
-                 $scope.canvas.path(segments).attr({
-                 fill: 'none',
-                 stroke: message.stroke,
-                 'stroke-width': 1
-                 });
-                 break;
-                 case 'rect':
-                 $scope.canvas.rect(message.dimensions.width, message.dimensions.height)
-                 .move(message.position.x, message.position.y)
-                 .attr({
-                 fill: message.fill,
-                 stroke: message.stroke
-                 });
-                 break;
-                 case 'ellipse':
-                 $scope.canvas.ellipse(message.dimensions.width, message.dimensions.height)
-                 .move(message.position.x, message.position.y)
-                 .attr({
-                 fill: message.fill,
-                 stroke: message.stroke
-                 });
-                 break;
-                 }
-                 }
-                 */
             }
 
             try {
@@ -215,6 +142,7 @@
                 $scope.drawingMode = MODE_DRAWING_PENCIL;
                 $scope.strokes = [];
                 $scope.canvas = SVG('canvas').size(1920, 1080);
+					$scope.canvas.group();
                 $scope.toolboxSide = 'left';
                 console.log('scope', $scope);
                 $scope.command = {
@@ -224,7 +152,7 @@
                     },
                     clear: function () {
                         if (window.confirm('Clear the drawing?')) {
-                            $scope.canvas.clear();
+                            $scope.canvas.children()[$scope.currentLayer].clear();
                         }
                         $scope.mode = MODE_DRAWING;
                     },
@@ -239,15 +167,24 @@
                     },
                     addNewLayer: function () {
                         $scope.layers.push({ index: $scope.layers.length, name: "new Layer " + $scope.layers.length, visible: true, src: $scope.layerIsVisible });
-                    },
+						$scope.canvas.group();
+					},
                     changeVisibility: function (index) {
                         if ($scope.layers[index].src == $scope.layerIsVisible) {
                             $scope.layers[index].src = $scope.layerIsInvisible;
                             $scope.layers[index].visibile = false;
+							
+							$scope.canvas.children()[index].attr({
+								visibility: 'hidden'
+							});
                         }
                         else {
                             $scope.layers[index].src = $scope.layerIsVisible;
                             $scope.layers[index].visibile = true;
+							
+							$scope.canvas.children()[index].attr({
+								visibility: 'visible'
+							});
                         }
                     },
 					switchActiveLayer : function(index){
@@ -419,7 +356,7 @@
 
                         if ($scope.mode === MODE_SELECT) {
                             $log.info('Select');
-                            var children = $scope.canvas.children();
+                            var children = $scope.canvas.children()[$scope.currentLayer].children();
                             var topChild = null;
                             var foundSelected = false;
                             var firstChild = null;
@@ -462,7 +399,7 @@
                             }
 
                         } else if ($scope.mode === MODE_COMMAND) {
-                            path = $scope.canvas.path().attr({
+                            path = $scope.canvas.children()[$scope.currentLayer].path().attr({
                                 fill: 'none',
                                 stroke: '#00F',
                                 'stroke-width': 2
@@ -470,13 +407,13 @@
                             points[points.length] = new window.Point(x, y, 1);
                         } else if ($scope.mode === MODE_DRAWING) {
                             if ($scope.drawingMode === MODE_DRAWING_PENCIL) {
-                                path = $scope.canvas.path().attr({
+                                path = $scope.canvas.children()[$scope.currentLayer].path().attr({
                                     fill: 'none',
                                     stroke: $scope.color.foreground,
                                     'stroke-width': 1
                                 }).M(x, y);
                             } else if ($scope.drawingMode === MODE_DRAWING_LINE) {
-                                shape = $scope.canvas.line(x, y, x, y).attr({
+                                shape = $scope.canvas.children()[$scope.currentLayer].line(x, y, x, y).attr({
                                     fill: $scope.color.fill,
                                     stroke: $scope.color.foreground,
                                     'stroke-width': 1,
@@ -484,7 +421,7 @@
                                     originalY: y
                                 });
                             } else if ($scope.drawingMode === MODE_DRAWING_RECT) {
-                                shape = $scope.canvas.rect(1, 1).attr({
+                                shape = $scope.canvas.children()[$scope.currentLayer].rect(1, 1).attr({
                                     fill: $scope.color.fill,
                                     stroke: $scope.color.foreground,
                                     'stroke-width': 1,
@@ -492,7 +429,7 @@
                                     originalY: y
                                 }).move(x, y);
                             } else if ($scope.drawingMode === MODE_DRAWING_OVAL) {
-                                shape = $scope.canvas.ellipse(1, 1).attr({
+                                shape = $scope.canvas.children()[$scope.currentLayer].ellipse(1, 1).attr({
                                     fill: $scope.color.fill,
                                     stroke: $scope.color.foreground,
                                     'stroke-width': 1,
