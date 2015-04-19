@@ -85,10 +85,10 @@ public class Statement {
             int start = matcher.start();
             int end = matcher.end();
             String parameterName = matcher.group(1);
-            Object parameterValue = statementParameters.get(parameterName);
-            if (parameterValue == null) {
+            if (!statementParameters.containsKey(parameterName)) {
                 throw new IllegalArgumentException("No query parameter matching '" + parameterName + "'");
             }
+            Object parameterValue = statementParameters.get(parameterName);
             preparedStatement.replace(start, end, "?");
             if (LOG.isDebugEnabled()) {
                 Matcher loggingMatcher = PARAMETER_PATTERN.matcher(loggingStatement);

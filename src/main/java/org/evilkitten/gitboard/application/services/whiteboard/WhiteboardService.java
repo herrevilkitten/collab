@@ -2,6 +2,7 @@ package org.evilkitten.gitboard.application.services.whiteboard;
 
 import java.util.List;
 
+import de.danielbechler.diff.node.DiffNode;
 import org.evilkitten.gitboard.application.entity.User;
 import org.evilkitten.gitboard.application.services.whiteboard.shape.BaseShape;
 
@@ -16,7 +17,11 @@ public interface WhiteboardService {
 
     Whiteboard copy(User creator, Integer sourceId);
 
+    Whiteboard branch(User creator, Integer sourceId);
+
     Whiteboard create(User creator, String name);
 
     BaseShape addShapeToWhiteboard(BaseShape shape, Whiteboard whiteboard);
+
+    DiffNode findDifferences(int sourceId, int destinationId);
 }

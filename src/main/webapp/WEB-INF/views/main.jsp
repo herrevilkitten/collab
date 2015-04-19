@@ -13,8 +13,9 @@
     <script src="//hangoutsapi.talkgadget.google.com/hangouts/api/hangout.js?v=1.4" type="text/javascript"></script>
 
     <link href="public/lib/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="public/lib/angular-ui/colorpicker/css/colorpicker.css" rel="stylesheet">
+    <link href="bower_components/angular-toastr/dist/angular-toastr.css" rel="stylesheet">
 
     <script src="//code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js" type="text/javascript"></script>
@@ -48,6 +49,10 @@
 
 <div ng-view></div>
 <script src="application/modules/lib/SVG.js"></script>
+
+<!-- angular-toastr -->
+<script src="bower_components/angular-toastr/dist/angular-toastr.js" type="text/javascript"></script>
+<script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js" type="text/javascript"></script>
 
 <script src="application/app.js"></script>
 <script src="application/modules/user/UserModule.js"></script>

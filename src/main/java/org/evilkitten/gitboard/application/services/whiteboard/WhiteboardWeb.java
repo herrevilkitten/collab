@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -12,6 +13,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import de.danielbechler.diff.node.DiffNode;
 import org.evilkitten.gitboard.application.services.user.CurrentUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +70,23 @@ public class WhiteboardWeb {
         LOG.info("User {} copying board: {}", currentUser.get(), copyWhiteboard);
         Whiteboard board = whiteboardService.copy(currentUser.get(), copyWhiteboard.getId());
         return Response.status(Response.Status.CREATED).entity(board).build();
+    }
+
+    @POST
+    @Path("/branch")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response branch(CopyWhiteboard copyWhiteboard) {
+        LOG.info("User {} branching board: {}", currentUser.get(), copyWhiteboard);
+        Whiteboard board = whiteboardService.branch(currentUser.get(), copyWhiteboard.getId());
+        return Response.status(Response.Status.CREATED).entity(board).build();
+    }
+
+    @POST
+    @Path("/diff")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response diff(DiffWhiteboard diffWhiteboard) {
+        DiffNode differences = whiteboardService.findDifferences(diffWhiteboard.getSource(), diffWhiteboard.getDestination());
+        return Response.status(Response.Status.OK).build();
     }
 
     @GET

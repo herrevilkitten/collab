@@ -63,10 +63,12 @@ public class PostgresqlWhiteboardDao implements WhiteboardDao {
     }
 
     @Override
-    public Whiteboard create(User creator, String name) {
+    public Whiteboard create(User creator, String name, Integer parentId, Integer originalId) {
         Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.create"));
         statement.set("creator", creator.getId());
         statement.set("name", name);
+        statement.set("parent", parentId);
+        statement.set("original", originalId);
 
         try (Connection connection = dataSource.getConnection()) {
             UncheckedResultSet resultSet = statement.updateAndReturn(connection, "id");
@@ -84,8 +86,6 @@ public class PostgresqlWhiteboardDao implements WhiteboardDao {
     public BaseShape addShapeToWhiteboard(BaseShape shape, Whiteboard whiteboard) {
         Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.addShapeToWhiteboard"));
         statement.set("board", whiteboard.getId());
-
-        LOG.info("Shape is: {}", shape);
         statement.set("json", jsonTranscoder.toJson(shape));
 
         try (Connection connection = dataSource.getConnection()) {

@@ -12,7 +12,7 @@ public interface WhiteboardDao {
 
     List<Whiteboard> getAllByAccess(User user);
 
-    Whiteboard create(User creator, String name);
+    Whiteboard create(User creator, String name, Integer parentId, Integer originalId);
 
     BaseShape addShapeToWhiteboard(BaseShape shape, Whiteboard whiteboard);
 
