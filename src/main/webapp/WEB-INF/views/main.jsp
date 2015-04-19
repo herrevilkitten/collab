@@ -43,8 +43,12 @@
     <jsp:include page="styles.jsp"/>
 </head>
 <body>
-<div ng-controller="UserController">
-    <input type="button" id="signoutButton" ng-click="signOut()" value="Sign out"/>
+<div ng-controller="UserController" id="banner">
+	<img id="logo" style="position:absolute; top:0px; left:0px; height:40px; width:40px;" src="public/images/collab.png"/>
+  
+	<span id="userName" ng-click="signOut()" style="float:right; font-weight:bolder; font-size:20px; margin-right:8px; margin-top:9px; cursor:pointer;">DorraExploradora</span>
+	<img id="profilePic" style="float:right; width:37px; height:37px; margin-right:8px; margin-top:8px; " src="public/images/blankProfilePic.png" />
+	<img id="cornerTab" style="position:absolute; width:20px; height:20px; top:24px; right:6px;" src="public/images/cornerTab.png" />
 </div>
 
 <div ng-view></div>

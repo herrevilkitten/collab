@@ -258,6 +258,49 @@
                         }
                     });
                 });
+				
+				$(window).keydown(function (e) {
+                    $scope.$apply(function () {
+                        if((e.keyCode == 187 || e.keyCode == 189) && e.ctrlKey){
+							var zoomFactor = 0;
+							if(e.keyCode == 187)
+								zoomFactor=0.2;
+							else 
+								zoomFactor=-0.2;
+							
+							var drawingLayers = $scope.canvas.children();
+							for (var i = 0; i < drawingLayers.length; i+=1) {
+								var prevVal = drawingLayers[i].attr('transform');
+								
+								var newVal = 0;
+								if(typeof prevVal == "undefined"){
+									newVal = 1;
+								}
+								else{
+									newVal = parseFloat(prevVal.substring(6, prevVal.length-1));		
+									$log.info('retrievedVal : ', newVal);									
+								}
+								newVal += zoomFactor;
+								$log.info('The value from the substring is : ', newVal);
+								
+								drawingLayers[i].attr({'transform' : "scale(" + newVal + ")"});
+							}
+							
+							var origHeight = $scope.canvas.attr("height");
+							//var origHeightInt = parseInt(origHeight.substring(0, origHeight.length));
+							var origWidth = $scope.canvas.attr("width");
+							//var origWidthInt = parseInt(origWidth.substring(0, origWidth.length));
+							
+							var newHeight = origHeight + (origHeight * zoomFactor);
+							var newWidth = origWidth + (origWidth * zoomFactor);
+							$scope.canvas.attr({
+								width: newWidth,
+								height: newHeight
+							})
+							event.preventDefault();
+						}
+                    });
+                });
 
                 svgElement.on('mousemove touchmove', function (e) {
                     $scope.$apply(function () {

@@ -9,14 +9,12 @@
              ng-click="openBoardDialog()"/>
       </div>
     </div>
-    <div class="boardContentContent" id="savedBoardContet">
-        <!----<div class="table" id="saveWhiteboardsTable">
-            <div id="header"></div>
-            <div id="item1"
-        </div>-->
-      <a ng-repeat="whiteboard in whiteboards" href="board/{{whiteboard.id}}">
-        {{whiteboard.name}}
-      </a>
+    <div class="boardContentContent" id="savedBoardContent">
+		<div id="savedBoardTable">
+			<div class="savedBoardRow boardRow" ng-repeat="whiteboard in whiteboards" ng-class-odd="'oddRowBoard'" ng-class-even="'evenRowBoard'">
+				<a class="savedBoardLink" href="board/{{whiteboard.id}}">{{whiteboard.name}}</a>
+			</div>
+		</div>
     </div>
   </div>
   <div id="sharedBoardsContainer">
@@ -29,10 +27,9 @@
       </div>
     </div>
     <div class="boardContentContent" id="sharedBoardsContent">
-      <a ng-repeat="whiteboard in sharedWhiteboards" href="board/{{whiteboard.id}}">
-        {{whiteboard.name}}
-      </a>
-
+		<div class="sharedBoardRow boardRow" ng-repeat="whiteboard in sharedWhiteboards" >
+			<a class="sharedBoardTitle" href="board/{{whiteboard.id}}">{{whiteboard.name}}</a>
+		</div>
     </div>
   </div>
   <div id="invitations"></div>
@@ -55,12 +52,9 @@
   </div>
 </div>
 
-<img id="logo" style="position:absolute; bottom:0px; right:0px; height:50px; width:50px;"
-     src="public/images/collab.png"/>
-
 <script type="text/javascript">
   //Change the height of the containing div
-  document.getElementById("mainContentContainer").parentElement.style.height = "100%";
+  document.getElementById("mainContentContainer").parentElement.style.height = "90%";
 
   function highlightButton(button) {
     button.style.border = " 1px solid #686868";
