@@ -23,26 +23,33 @@ public class WhiteboardWeb {
     final static Whiteboard WHITEBOARD = new Whiteboard();
 
     private final CurrentUser currentUser;
-    private final WhiteboardDao whiteboardDao;
+    private final WhiteboardService whiteboardService;
 
     @Inject
-    public WhiteboardWeb(CurrentUser currentUser, WhiteboardDao whiteboardDao) {
+    public WhiteboardWeb(CurrentUser currentUser, WhiteboardService whiteboardService) {
         this.currentUser = currentUser;
-        this.whiteboardDao = whiteboardDao;
+        this.whiteboardService = whiteboardService;
     }
 
     @GET
     @Path("{boardId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Whiteboard getById(@PathParam("boardId") Integer boardId) {
-        return whiteboardDao.getById(boardId);
+        return whiteboardService.getById(boardId);
     }
 
     @GET
     @Path("/byUser")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Whiteboard> getAllByUser() {
-        return whiteboardDao.getAllByCreator(currentUser.get());
+        return whiteboardService.getAllByCreator(currentUser.get());
+    }
+
+    @GET
+    @Path("/byAccess")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Whiteboard> getAllByAccess() {
+        return whiteboardService.getAllByAccess(currentUser.get());
     }
 
     @POST
@@ -50,7 +57,16 @@ public class WhiteboardWeb {
     @Produces(MediaType.APPLICATION_JSON)
     public Response create(NewWhiteboard newWhiteboard) {
         LOG.info("User {} creating new board: {}", currentUser.get(), newWhiteboard);
-        Whiteboard board = whiteboardDao.create(currentUser.get(), newWhiteboard.getName());
+        Whiteboard board = whiteboardService.create(currentUser.get(), newWhiteboard.getName());
+        return Response.status(Response.Status.CREATED).entity(board).build();
+    }
+
+    @POST
+    @Path("/copy")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response copy(CopyWhiteboard copyWhiteboard) {
+        LOG.info("User {} copying board: {}", currentUser.get(), copyWhiteboard);
+        Whiteboard board = whiteboardService.copy(currentUser.get(), copyWhiteboard.getId());
         return Response.status(Response.Status.CREATED).entity(board).build();
     }
 

@@ -12,6 +12,10 @@ public interface WhiteboardService {
 
     List<Whiteboard> getAllByCreator(User creator);
 
+    List<Whiteboard> getAllByAccess(User user);
+
+    Whiteboard copy(User creator, Integer sourceId);
+
     Whiteboard create(User creator, String name);
 
     BaseShape addShapeToWhiteboard(BaseShape shape, Whiteboard whiteboard);

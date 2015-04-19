@@ -3,7 +3,7 @@
 
     angular
         .module('gitboard.whiteboard')
-        .service('SocketFactory', function($log, CurrentBoard) {
+        .service('SocketFactory', function($location, $log, CurrentBoard) {
             var atmosphere = $.atmosphere,
                 Socket = function(options) {
                     options = options || {};
@@ -110,15 +110,13 @@
                         request.onError = function(response) {
                             $log.error('An error occurred:', response);
 
+                            if (response.reasonPhrase === 'maxReconnectOnClose reached') {
+                                $location.path('home');
+                            }
+
                             angular.forEach(socket.handlers.error, function(handler) {
                                 handler(socket, response);
                             });
-                            /*
-                             if (response.reasonPhrase === 'No suspended connection available') {
-                             window.console.log('Reconnecting because of timeout');
-                             $scope.subSocket = socket.subscribe(request);
-                             }
-                             */
                         };
 
                         request.onReconnect = function(request, response) {

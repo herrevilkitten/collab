@@ -29,6 +29,9 @@
       </div>
     </div>
     <div class="boardContentContent" id="sharedBoardsContent">
+      <a ng-repeat="whiteboard in sharedWhiteboards" href="board/{{whiteboard.id}}">
+        {{whiteboard.name}}
+      </a>
 
     </div>
   </div>

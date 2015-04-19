@@ -33,6 +33,23 @@ public class DefaultWhiteboardService implements WhiteboardService {
     }
 
     @Override
+    public List<Whiteboard> getAllByAccess(User user) {
+        return whiteboardDao.getAllByAccess(user);
+    }
+
+    @Override
+    public Whiteboard copy(User creator, Integer sourceId) {
+        Whiteboard source = getById(sourceId);
+        Whiteboard destination = create(creator, "");
+
+        for (BaseShape shape : source.getShapes()) {
+            addShapeToWhiteboard(shape, destination);
+        }
+
+        return destination;
+    }
+
+    @Override
     public Whiteboard create(User creator, String name) {
         return whiteboardDao.create(creator, name);
     }

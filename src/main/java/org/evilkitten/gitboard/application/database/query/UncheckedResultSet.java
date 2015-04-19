@@ -1201,6 +1201,23 @@ public class UncheckedResultSet implements ResultSet {
         }
     }
 
+    public java.util.Date getJavaDate(int columnIndex) {
+        Timestamp timestamp = getTimestamp(columnIndex);
+        if (timestamp == null) {
+            return null;
+        }
+        return new java.util.Date(timestamp.getTime());
+    }
+
+    public java.util.Date getJavaDate(String columnLabel) {
+        Timestamp timestamp = getTimestamp(columnLabel);
+        if (timestamp == null) {
+            return null;
+        }
+        return new java.util.Date(timestamp.getTime());
+    }
+
+
     @Override
     public URL getURL(int columnIndex) {
         try {

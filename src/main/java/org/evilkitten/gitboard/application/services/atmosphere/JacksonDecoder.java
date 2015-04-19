@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.atmosphere.config.managed.Decoder;
 import org.evilkitten.gitboard.application.services.atmosphere.message.ActionMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.AddShapeActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.GitboardMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.HeartbeatMessage;
-import org.evilkitten.gitboard.application.services.atmosphere.message.QueryMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

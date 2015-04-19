@@ -5,6 +5,7 @@
         .module('gitboard.frontpage', [])
         .controller('FrontPageController', function($scope, $log, $location, Whiteboard) {
             $scope.whiteboards = [];
+            $scope.sharedWhiteboards = [];
             $scope.isDialogOpen = false;
             $scope.newBoardName = '';
 
@@ -28,6 +29,20 @@
                         $scope.whiteboards.length = 0;
                         angular.forEach(data, function(item) {
                             $scope.whiteboards.push(item);
+                        });
+                    })
+                    .error(function(data) {
+                        $log.error('Unable to retrieve boards for user:', data);
+                    });
+
+                // Get the shared whiteboards
+                Whiteboard
+                    .listShared()
+                    .success(function(data) {
+                        $log.info('Retrieved boards:', data);
+                        $scope.sharedWhiteboards.length = 0;
+                        angular.forEach(data, function(item) {
+                            $scope.sharedWhiteboards.push(item);
                         });
                     })
                     .error(function(data) {
