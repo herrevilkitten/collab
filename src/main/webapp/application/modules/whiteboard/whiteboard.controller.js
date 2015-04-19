@@ -26,7 +26,8 @@
                                                      CurrentBoard,
                                                      MessageFactory,
                                                      ShapeFactory,
-                                                     SocketFactory) {
+                                                     SocketFactory,
+                                                     Whiteboard) {
             function addShape(shape) {
                 var segments;
                 window.console.log('Adding', shape, 'from welcome');
@@ -42,7 +43,8 @@
                     $scope.canvas.path(segments).attr({
                         fill: 'none',
                         stroke: shape.stroke,
-                        'stroke-width': 1
+                        'stroke-width': 1,
+                        '__id': shape.id
                     });
                     break;
 
@@ -50,7 +52,8 @@
                     $scope.canvas.line(shape.start.x, shape.start.y, shape.end.x, shape.end.y)
                         .attr({
                             stroke: shape.stroke,
-                            'stroke-width': 1
+                            'stroke-width': 1,
+                            '__id': shape.id
                         });
                     break;
 
@@ -59,7 +62,8 @@
                         .move(shape.position.x, shape.position.y)
                         .attr({
                             fill: shape.fill,
-                            stroke: shape.stroke
+                            stroke: shape.stroke,
+                            '__id': shape.id
                         });
                     break;
 
@@ -68,7 +72,8 @@
                         .move(shape.position.x, shape.position.y)
                         .attr({
                             fill: shape.fill,
-                            stroke: shape.stroke
+                            stroke: shape.stroke,
+                            '__id': shape.id
                         });
                     break;
                 }
@@ -77,13 +82,14 @@
             function onWelcomeMessage(socket, response, message) {
                 $scope.uuid = message.uuid;
                 $scope.user.id = message.user.id;
+                $scope.board = message.whiteboard;
                 angular.forEach(message.whiteboard.shapes, addShape);
             }
 
             function onAddShapeMessage(socket, response, message) {
                 if (message.actor.id == $scope.user.id) {
-                    // Since the database assigns shape ids, update the id and return
-                    // so it doesn't draw twice
+                    // Since the database assigns shape ids, update the id of the last shape
+                    // and return so it doesn't draw twice
                     return;
                 }
 
@@ -192,6 +198,7 @@
                     }
                 };
                 $scope.boardId = CurrentBoard;
+                $scope.board = null;
                 $scope.user = {id: 0};
                 $scope.selected = null;
                 $scope.uuid = null;
@@ -200,9 +207,11 @@
                 $scope.strokes = [];
                 $scope.canvas = SVG('canvas').size(1920, 1080);
                 $scope.toolboxSide = 'left';
+                console.log('scope', $scope);
                 $scope.command = {
                     home: function() {
-                        $location.path('/home');
+                        $scope.mode = MODE_DRAWING;
+                        $location.path('home');
                     },
                     clear: function() {
                         if (window.confirm('Clear the drawing?')) {
@@ -212,8 +221,43 @@
                     },
                     switchSides: function() {
                         $scope.toolboxSide = ($scope.toolboxSide === 'left') ? 'right' : 'left';
+                        $scope.mode = MODE_DRAWING;
+                    },
+                    copyBoard: function() {
+                        Whiteboard
+                            .copy($scope.boardId)
+                            .then(function(response) {
+                                $location.path('board/' + response.data.id);
+                            })
+                            .catch(function(error) {
+                                $log.error('Unable to copy board:', error);
+                            });
+                        $scope.mode = MODE_DRAWING;
+                    },
+                    forkBoard: function() {
+                        Whiteboard
+                            .fork($scope.boardId)
+                            .then(function(response) {
+                                $location.path('board/' + response.data.id);
+                            })
+                            .catch(function(error) {
+                                $log.error('Unable to fork board:', error);
+                            });
+                        $scope.mode = MODE_DRAWING;
+                    },
+                    shareBoard: function() {
+                        $scope.mode = MODE_DRAWING;
+                    },
+                    differences: function() {
+                        Whiteboard
+                            .differences($scope.board.originalId, $scope.board.id)
+                            .then(function(response) {
+                            })
+                            .catch(function(error) {
+                                $log.error('Unable to fork board:', error);
+                            });
+                        $scope.mode = MODE_DRAWING;
                     }
-
                 };
 
                 var recognizer = new window.PDollarRecognizer(),

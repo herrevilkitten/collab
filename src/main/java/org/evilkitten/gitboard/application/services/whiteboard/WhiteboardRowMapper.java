@@ -24,7 +24,19 @@ public class WhiteboardRowMapper implements RowMapper<Whiteboard> {
         }
         whiteboard.setName(name);
         whiteboard.setCreator(userService.getById(resultSet.getInt("creatorId")));
-        whiteboard.setCreationTime(resultSet.getDate("creationTime"));
+        whiteboard.setCreationTime(resultSet.getJavaDate("creationTime"));
+
+        Integer parentId = resultSet.getInt("parent");
+        if (resultSet.wasNull()) {
+            parentId = null;
+        }
+        whiteboard.setParentId(parentId);
+
+        Integer originalId = resultSet.getInt("original");
+        if (resultSet.wasNull()) {
+            originalId = null;
+        }
+        whiteboard.setOriginalId(originalId);
 
         return whiteboard;
     }

@@ -16,10 +16,23 @@
                 },
                 create: function(name) {
                     return $http.post(baseUrl + '/create', {name: name});
+                },
+                copy: function(id) {
+                    return $http.post(baseUrl + '/copy', {id: id});
+                },
+                fork: function(id) {
+                    return $http.post(baseUrl + '/branch', {id: id});
+                },
+                share: function(email) {
+
+                },
+                differences: function(source, destination) {
+                    return $http.post(baseUrl + '/diff', {source: source, destination: destination});
                 }
             };
         })
         .factory('CurrentBoard', function($routeParams) {
+            console.log('$routeParams', $routeParams);
             return $routeParams.boardId;
         });
 

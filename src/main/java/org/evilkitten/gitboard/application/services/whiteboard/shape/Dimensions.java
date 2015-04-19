@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class Dimensions {
-    float height;
-
-    float width;
+    int height;
+    int width;
 }
