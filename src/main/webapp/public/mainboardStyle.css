@@ -51,6 +51,10 @@ div.layerRow{
     height:40px;
 
     border-bottom: 1px solid grey;
+	background: white;
+}
+div.layerRow.selectedLayer{
+	background: gray;	
 }
 
 div.layerName{

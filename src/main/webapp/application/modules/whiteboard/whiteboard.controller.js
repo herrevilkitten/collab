@@ -191,12 +191,15 @@
                         return new SVG.Color(color).complementary();
                     }
                 };
+				$scope.currentLayer = 0;
                 $scope.layerIsVisible = "public/images/eyeIcon.png";
                 $scope.layerIsInvisible = "public/images/closedEyeIcon.png";
                 $scope.layers = [{ index: 0, name: "default layer", visibile: true, src: $scope.layerIsVisible }];
-                $scope.showLayer = false;/*function(index) {
+                $scope.showLayer = true;/*function(index) {
                     return false;
                 };*/
+				$scope.altLayerName = "";
+				$scope.editLayerNameMode = -1;
                 $scope.boardId = CurrentBoard;
                 $scope.user = {id: 0};
                 $scope.selected = null;
@@ -236,12 +239,13 @@
                             $scope.layers[index].src = $scope.layerIsVisible;
                             $scope.layers[index].visibile = true;
                         }
-
-                        if (!$scope.$$phase) {
-                            $scope.$apply();
-                        }
-                    }
-
+                    },
+					switchActiveLayer : function(index){
+						$scope.currentLayer = index;
+					},
+					changeLayerName : function(index) {
+						$scope.editLayerNameMode = index;
+					}
                 };
 
                 var recognizer = new window.PDollarRecognizer(),
@@ -537,5 +541,17 @@
                     }
                 }
             }
-        }]);
+        }])
+		.directive('ngEnter', function () {
+			return function (scope, element, attrs) {
+				element.bind("keydown keypress", function (event) {
+					if(event.which === 13) {
+						scope.layers[scope.editLayerNameMode].name = scope.altLayerName;
+						scope.editLayerNameMode = -1;
+
+						event.preventDefault();
+					}
+				});
+			};
+		});
 }(window.angular, window.SVG, window.gapi, window.jQuery));

@@ -1,4 +1,4 @@
-<div id="canvas"></div>
+<div id="canvas" ng-show="showLayer"></div>
 <div id="toolbox" ng-class="{left: toolboxSide == 'left', right: toolboxSide == 'right'}">
   <div id="modebox">
     <div class="btn-group-vertical">
@@ -75,10 +75,11 @@
     </div>
     <div id="layerContent">
         <div id="layerTable">
-            <div class="layerRow" ng-repeat="layer in layers">
+            <div class="layerRow" ng-repeat="layer in layers" ng-class="{selectedLayer: layer.index==currentLayer}" ng-click="command.switchActiveLayer(layer.index)">
                 <div class="layerCol visibilityCol" ng-click="command.changeVisibility(layer.index)"><img id="layerVisibilityButton" src="{{layer.src}}" /></div>
-                <div class="layerCol layerName">{{layer.name}}</div>
-            </div>
+                <div class="layerCol layerName" ng-show="!(editLayerNameMode==layer.index)" ng-dblclick="command.changeLayerName(layer.index)">{{layer.name}}</div>
+				<input type="text" onclick="this.focus()" layerNameInput" ng-model="altLayerName" ng-enter ng-show="editLayerNameMode==layer.index" />
+			</div>
         </div>
         <div id="layerToolbar">
             <img id="addNewLayer" src="public/images/addNewLayer.png" ng-click="command.addNewLayer()" / >
