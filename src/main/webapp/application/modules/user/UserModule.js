@@ -2,14 +2,12 @@
     'use strict';
 
     angular.module('gitboard.user', [])
-        .factory('UserService', ['$log', '$resource',
-            function($log, $resource) {
-                $log.debug('Creating UserService');
-                return $resource(
-
-                );
-            }])
-        .controller('UserController', ['$scope', '$log', '$http', '$location',
+        .factory('CurrentUser',
+        function() {
+            return window.user;
+        })
+        .controller('UserController', [
+            '$scope', '$log', '$http', '$location',
             function($scope, $log, $http, $location) {
                 $scope.signOut = function() {
                     $log.info('Signing out');
@@ -20,5 +18,6 @@
 //                        gapi.auth.signOut();
                     });
                 };
-            }]);
+            }
+        ]);
 }(window.angular, window.SVG, window.gapi, window.jQuery));

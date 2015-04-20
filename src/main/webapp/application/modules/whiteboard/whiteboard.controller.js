@@ -26,6 +26,7 @@
                                                      $routeParams,
                                                      $timeout,
                                                      CurrentBoard,
+                                                     CurrentUser,
                                                      MessageFactory,
                                                      ShapeFactory,
                                                      SocketFactory,
@@ -124,7 +125,7 @@
             };
             $scope.boardId = $routeParams.boardId;
             $scope.board = null;
-            $scope.user = {id: 0};
+            $scope.user = CurrentUser;
             $scope.selected = null;
             $scope.uuid = null;
             $scope.mode = MODE_DRAWING;
