@@ -70,5 +70,10 @@
 <script src="application/modules/whiteboard/whiteboard.socketfactory.js"></script>
 <script src="application/modules/whiteboard/whiteboard.resource.js"></script>
 <script src="application/modules/whiteboard/whiteboard.shapefactory.js"></script>
+
+<!-- inline -->
+<script type="text/javascript">
+    window.user = ${it.user};
+</script>
 </body>
 </html>
