@@ -84,7 +84,13 @@ public class PostgresqlWhiteboardDao implements WhiteboardDao {
 
     @Override
     public BaseShape addShapeToWhiteboard(BaseShape shape, Whiteboard whiteboard) {
-        Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.addShapeToWhiteboard"));
+        Statement statement;
+        if (shape.getBoardShapeId() != null) {
+            statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.addOldShapeToWhiteboard"));
+            statement.set("boardShapeId", shape.getBoardShapeId());
+        } else {
+            statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.addShapeToWhiteboard"));
+        }
         statement.set("board", whiteboard.getId());
         statement.set("json", jsonTranscoder.toJson(shape));
 

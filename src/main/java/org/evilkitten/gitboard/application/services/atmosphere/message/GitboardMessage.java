@@ -16,4 +16,5 @@ import lombok.Data;
 abstract public class GitboardMessage {
     private final Calendar timestamp = GregorianCalendar.getInstance();
     private Integer boardId;
+    private String uuid;
 }

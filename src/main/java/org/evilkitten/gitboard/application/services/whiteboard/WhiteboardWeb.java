@@ -1,11 +1,11 @@
 package org.evilkitten.gitboard.application.services.whiteboard;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 
 import de.danielbechler.diff.node.DiffNode;
 import org.evilkitten.gitboard.application.services.user.CurrentUser;
+import org.evilkitten.gitboard.application.services.whiteboard.shape.BaseShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,6 +80,18 @@ public class WhiteboardWeb {
         LOG.info("User {} branching board: {}", currentUser.get(), copyWhiteboard);
         Whiteboard board = whiteboardService.branch(currentUser.get(), copyWhiteboard.getId());
         return Response.status(Response.Status.CREATED).entity(board).build();
+    }
+
+    @POST
+    @Path("/merge")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response merge(CopyWhiteboard copyWhiteboard) {
+        LOG.info("User {} merging board: {}", currentUser.get(), copyWhiteboard);
+        Set<BaseShape> baseShapes = whiteboardService.merge(copyWhiteboard.getId());
+        return Response
+            .status(baseShapes.isEmpty() ? Response.Status.OK : Response.Status.CONFLICT)
+            .entity(baseShapes)
+            .build();
     }
 
     @POST

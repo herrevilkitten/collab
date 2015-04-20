@@ -18,6 +18,7 @@ public class ShapeRowMapper implements RowMapper<BaseShape> {
         BaseShape shape = (BaseShape) decoder.fromJson(resultSet.getString("json"), BaseShape.class);
         shape.setId(resultSet.getInt("id"));
         shape.setCreationTime(resultSet.getJavaDate("creation_time"));
+        shape.setBoardShapeId(resultSet.getInt("board_shape_id"));
         return shape;
     }
 }
