@@ -12,8 +12,8 @@
     <div class="boardContentContent" id="savedBoardContent">
 		<div id="savedBoardTable">
 			<div class="savedBoardRow boardRow" ng-repeat="whiteboard in whiteboards" ng-class-odd="'oddRowBoard'" ng-class-even="'evenRowBoard'">
-				<a class="savedBoardLink" href="board/{{whiteboard.id}}">{{whiteboard.name}}</a>
-			</div>
+                <a class="savedBoardLink" ng-click="openBoard(whiteboard.id)" href="board/{{whiteboard.id}}">{{whiteboard.name}}</a>
+            </div>
 		</div>
     </div>
   </div>
@@ -28,7 +28,7 @@
     </div>
     <div class="boardContentContent" id="sharedBoardsContent">
 		<div class="sharedBoardRow boardRow" ng-repeat="whiteboard in sharedWhiteboards" >
-			<a class="sharedBoardTitle" href="board/{{whiteboard.id}}">{{whiteboard.name}}</a>
+			<a class="sharedBoardTitle" href="board/{{whiteboard.id}}">{{whiteboard.name}}</a> 
 		</div>
     </div>
   </div>

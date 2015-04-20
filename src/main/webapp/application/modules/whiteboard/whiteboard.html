@@ -54,9 +54,9 @@
           <button type="button" class="btn btn-primary" ng-click="selectMode = 'move'">
               <i title="move" class="fa fa-arrows"></i>
           </button>
-          <button type="button" class="btn btn-primary" ng-click="selectMode = 'resize'">
+          <!--<button type="button" class="btn btn-primary" ng-click="selectMode = 'resize'">
               <i title="resize" class="fa fa-home"></i>
-          </button>
+          </button>-->
       </div>
   </div>
   <div id="commandToolbox" class="toolbox" ng-show="mode === 'c'">
@@ -119,6 +119,12 @@
   container.style.paddingTop = "45px"
   container.style.position="relative"
   container.style.top="-45px"
+  
+    //Force a reload for navigating to a new whiteboard
+    if (!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+    }
   
   
  </script>

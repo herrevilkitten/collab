@@ -11,4 +11,5 @@ abstract public class BaseShape {
     private int id;
     private String stroke;
     private Date creationTime;
+    private int layer;
 }

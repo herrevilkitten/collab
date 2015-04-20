@@ -31,6 +31,12 @@
             function addShape(shape) {
                 var segments;
                 window.console.log('Adding', shape, 'from welcome');
+                if (shape.layer + 1 > $scope.layers.length) {
+                    $log.info("I added a layer");
+                    for(var i=0; i<=((shape.layer+1)-$scope.layers.length); i+=1){
+                        $scope.command.addNewLayer();
+                    }
+                }
 
                 switch (shape.type) {
                 case '.PathShape':
@@ -40,41 +46,44 @@
 
                     window.console.log('Segments', segments);
 
-                    $scope.canvas.children()[$scope.currentLayer].path(segments).attr({
+                    $scope.canvas.children()[shape.layer].path(segments).attr({
                         fill: 'none',
                         stroke: shape.stroke,
                         'stroke-width': 1,
-                        '__id': shape.id
+                        '__id': shape.id,
+                        'class': 'layer' + shape.layer
                     });
                     break;
 
                 case '.LineShape':
-                    $scope.canvas.children()[$scope.currentLayer].line(shape.start.x, shape.start.y, shape.end.x, shape.end.y)
+                    $scope.canvas.children()[shape.layer].line(shape.start.x, shape.start.y, shape.end.x, shape.end.y)
                         .attr({
                             stroke: shape.stroke,
                             'stroke-width': 1,
-                            '__id': shape.id
+                            '__id': shape.id,
+                            'class': 'layer' + shape.layer
                         });
                     break;
 
                 case '.RectangleShape':
-                    $scope.canvas.children()[$scope.currentLayer].rect(shape.dimensions.width, shape.dimensions.height)
+                    $scope.canvas.children()[shape.layer].rect(shape.dimensions.width, shape.dimensions.height)
                         .move(shape.position.x, shape.position.y)
                         .attr({
                             fill: shape.fill,
                             stroke: shape.stroke,
                             '__id': shape.id,
-							'class': 'layer' + $scope.currentLayer
+                            'class': 'layer' + shape.layer
                         });
                     break;
 
                 case '.EllipseShape':
-                    $scope.canvas.children()[$scope.currentLayer].ellipse(shape.dimensions.width, shape.dimensions.height)
+                    $scope.canvas.children()[shape.layer].ellipse(shape.dimensions.width, shape.dimensions.height)
                         .move(shape.position.x, shape.position.y)
                         .attr({
                             fill: shape.fill,
                             stroke: shape.stroke,
-                            '__id': shape.id
+                            '__id': shape.id,
+                            'class': 'layer' + shape.layer
                         });
                     break;
                 }
@@ -202,7 +211,9 @@
                     copyBoard: function() {
                         Whiteboard
                             .copy($scope.boardId)
-                            .then(function(response) {
+                            .then(function (response) {
+                                //Tell the page that it is dirty
+                                $location.hash("");
                                 $location.path('board/' + response.data.id);
                             })
                             .catch(function(error) {
@@ -213,7 +224,9 @@
                     forkBoard: function() {
                         Whiteboard
                             .fork($scope.boardId)
-                            .then(function(response) {
+                            .then(function (response) {
+                                //Tell the page that it is dirty
+                                $location.hash("");
                                 $location.path('board/' + response.data.id);
                             })
                             .catch(function(error) {
@@ -531,16 +544,16 @@
                     window.console.log('Adding action:', action);
                     switch (action.type) {
                         case 'path':
-                            shape = ShapeFactory.createPath(action);
+                            shape = ShapeFactory.createPath(action, $scope.currentLayer);
                             break;
                         case 'line':
-                            shape = ShapeFactory.createLine(action);
+                            shape = ShapeFactory.createLine(action, $scope.currentLayer);
                             break;
                         case 'rect':
-                            shape = ShapeFactory.createRectangle(action);
+                            shape = ShapeFactory.createRectangle(action, $scope.currentLayer);
                             break;
                         case 'ellipse':
-                            shape = ShapeFactory.createEllipse(action);
+                            shape = ShapeFactory.createEllipse(action, $scope.currentLayer);
                             break;
                     }
                     message = MessageFactory.createAddShape(shape);

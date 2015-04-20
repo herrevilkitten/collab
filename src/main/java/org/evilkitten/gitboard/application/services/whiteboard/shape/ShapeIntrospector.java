@@ -67,6 +67,9 @@ public class ShapeIntrospector extends StandardIntrospector {
         if (descriptor.getName().equals("parentId")) {
             return true;
         }
+        if(descriptor.getName().equals("layer")){
+        	return true;
+        }
         if (descriptor.getReadMethod() == null) {
             return true;
         }

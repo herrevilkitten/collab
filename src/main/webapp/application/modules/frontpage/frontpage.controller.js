@@ -14,6 +14,8 @@
                     .create(name)
                     .success(function(data) {
                         $log.info('Created new whiteboard #' + data.id);
+                        //Tell the page that it is dirty
+                        $location.hash("");
                         $location.path('/board/' + data.id);
                     })
                     .error(function(data) {

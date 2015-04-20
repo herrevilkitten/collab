@@ -86,8 +86,13 @@ div#savedBoardTable{
 	overflow-y: auto;
 	overflow-x: hidden;
 }
-a#savedBoardLink{
-	font-size: 18px;
+span.savedBoardLink{
+    color: blue;
+    cursor: pointer;
+	font-size: 15px;
+
+    position:relative;
+    z-index:10;
 }
 input#boardNameEntry{
     width: 150px;
@@ -120,6 +125,8 @@ img.boardToolView{
     margin-right: 2px;
 }
 img.boardTool{
+    position: relative;
+    z-index:10;
     cursor:pointer;
 }
 span.boardBannerTitle{
