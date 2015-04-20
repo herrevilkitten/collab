@@ -122,6 +122,7 @@ public class Statement {
             return preparedStatement.executeQuery();
         } catch (Exception e) {
             LOG.error("Exception while executing statement: {}", statementBuilder.toString());
+            LOG.error("{}", e);
             throw e;
         }
     }
@@ -140,6 +141,7 @@ public class Statement {
             return preparedStatement.executeUpdate();
         } catch (Exception e) {
             LOG.error("Exception while executing statement: {}", statementBuilder.toString());
+            LOG.error("{}", e);
             throw e;
         }
     }
@@ -159,6 +161,7 @@ public class Statement {
             return new UncheckedResultSet(preparedStatement.getGeneratedKeys());
         } catch (Exception e) {
             LOG.error("Exception while executing statement: {}", statementBuilder.toString());
+            LOG.error("{}", e);
             throw e;
         }
     }

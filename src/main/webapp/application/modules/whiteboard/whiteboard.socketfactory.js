@@ -3,11 +3,11 @@
 
     angular
         .module('gitboard.whiteboard')
-        .service('SocketFactory', function($location, $log, CurrentBoard) {
+        .service('SocketFactory', function($location, $log) {
             var atmosphere = $.atmosphere,
                 Socket = function(options) {
                     options = options || {};
-                    this.url = 'chat/' + CurrentBoard;
+                    this.url = 'chat/' + options.boardId;
                     this.contentType = options.contentType || 'application/json';
                     this.logLevel = options.logLevel || 'debug';
                     this.transport = options.transport || 'websocket';
@@ -156,7 +156,7 @@
                         if (!this.socket) {
                             return;
                         }
-                        this.socket.unsubscribe();
+                        this.socket.close();
                         return this;
                     };
 
@@ -175,8 +175,8 @@
                 };
 
             return {
-                createSocket: function() {
-                    return new Socket();
+                createSocket: function(boardId) {
+                    return new Socket({boardId: boardId});
                 },
                 reconnectOnErrorHandler: function(socket, response) {
                     if (response.reasonPhrase === 'No suspended connection available') {

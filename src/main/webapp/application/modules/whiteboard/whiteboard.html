@@ -17,8 +17,8 @@
   <div id="colorToolbox" class="colorToolbox">
     <div class="btn-group-vertical">
       <button class="btn btn-primary" ng-style="{'background-color': color.foreground, color: color.foreground}"
-              colorpicker="rgba" colorpicker-position="right" colorpicker-parent="true" colorpicker-fixed-position="true"
-              ng-model="color.foreground">
+              colorpicker="rgba" colorpicker-position="right" colorpicker-parent="true"
+              colorpicker-fixed-position="true" ng-model="color.foreground">
         <i title="Select" class="fa fa-square"></i>
       </button>
       <button class="btn btn-primary" ng-style="{'background-color': color.fill, color: color.fill}" colorpicker="rgba"
@@ -66,6 +66,9 @@
       <button type="button" class="btn btn-primary" ng-click="command.forkBoard()">
         <i title="Fork" class="fa fa-code-fork"></i>
       </button>
+      <button type="button" class="btn btn-primary" ng-click="command.mergeBoard()">
+        <i title="Merge" class="fa fa-code-fork fa-flip-vertical"></i>
+      </button>
       <button type="button" class="btn btn-primary" ng-click="command.differences()">
         <i title="Differences" class="fa fa-exchange"></i>
       </button>
@@ -73,6 +76,21 @@
   </div>
 </div>
 
-<ul>
-  <li ng-repeat="stroke in strokes">{{stroke}}</li>
-</ul>
+<script type="text/ng-template" id="cannot-auto-merge.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Merge Error</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+      Unable to automatically merge branch. A shape has been modified in both the
+      branch and the parent. </p>
+
+    <p>
+      Which version is correct? </p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="useBranch()">This Branch</button>
+    <button class="btn btn-primary" ng-click="useParent()">Parent</button>
+    <button class="btn btn-primary" ng-click="cancel()">Cancel</button>
+  </div>
+</script>

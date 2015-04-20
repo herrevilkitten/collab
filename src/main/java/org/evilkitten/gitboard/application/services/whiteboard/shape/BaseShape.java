@@ -9,6 +9,7 @@ import lombok.Data;
 @JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.PROPERTY, property = "type")
 abstract public class BaseShape {
     private int id;
+    private Integer boardShapeId;
     private String stroke;
     private Date creationTime;
 }

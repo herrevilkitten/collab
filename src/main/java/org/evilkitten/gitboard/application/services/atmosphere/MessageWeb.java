@@ -70,15 +70,12 @@ public class MessageWeb extends HttpServlet {
         String json = resource.getRequest().body().asString();
 
         GitboardMessage message = (GitboardMessage) jsonTranscoder.fromJson(json, GitboardMessage.class);
+        message.setUuid(resource.uuid());
+
         if (message instanceof ActionMessage) {
             ((ActionMessage) message).setActor(user);
         }
 
-        LOG.info("Last session access for {}: {}", resource.uuid(), resource.session().getLastAccessedTime());
-        LOG.info("Json is    {}", resource.getRequest().body().asString());
-        LOG.info("Message is {}", message);
-        LOG.info("{} sent [#{} {}] {}", user, message.getBoardId(),
-            message.getClass().getSimpleName(), message.toString());
         Whiteboard whiteboard = whiteboardService.getRawById(message.getBoardId());
         if (message instanceof AddShapeMessage) {
             whiteboardService.addShapeToWhiteboard(((AddShapeMessage) message).getShape(), whiteboard);

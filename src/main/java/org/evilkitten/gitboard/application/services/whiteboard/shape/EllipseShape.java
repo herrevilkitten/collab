@@ -1,15 +1,17 @@
 package org.evilkitten.gitboard.application.services.whiteboard.shape;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString(callSuper = true)
 public class EllipseShape extends BaseShape {
     private String fill;
 
     private Point position;
 
     private Dimensions dimensions;
-
+/*
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -31,4 +33,5 @@ public class EllipseShape extends BaseShape {
         result = 31 * result + (dimensions != null ? dimensions.hashCode() : 0);
         return result;
     }
+    */
 }

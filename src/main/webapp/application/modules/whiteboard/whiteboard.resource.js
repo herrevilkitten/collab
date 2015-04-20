@@ -23,6 +23,9 @@
                 fork: function(id) {
                     return $http.post(baseUrl + '/branch', {id: id});
                 },
+                merge: function(id) {
+                    return $http.post(baseUrl + '/merge', {id: id});
+                },
                 share: function(email) {
 
                 },
