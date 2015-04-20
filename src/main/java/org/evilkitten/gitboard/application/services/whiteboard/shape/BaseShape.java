@@ -12,4 +12,5 @@ abstract public class BaseShape {
     private String stroke;
     private Date creationTime;
     private int layer;
+    private String layerName;
 }

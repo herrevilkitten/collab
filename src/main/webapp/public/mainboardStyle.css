@@ -108,3 +108,10 @@ img#layerVisibilityButton{
 img#layerVisibilityButton:hover{
     cursor:pointer;
 }
+input#commentEntry{
+    position:absolute;
+
+    top:100px;
+    left:100px;
+    z-index:50000;
+}

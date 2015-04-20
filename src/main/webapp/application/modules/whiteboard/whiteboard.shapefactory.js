@@ -10,7 +10,7 @@
                     }
                 },
                 shapes = {
-                    createPath: function(object, layerIndex) {
+                    createPath: function (object, layer) {
                         var segments = object._segments.map(function(segment) {
                             return {
                                 type: segment.type,
@@ -25,11 +25,12 @@
                             type: '.PathShape',
                             segments: segments,
                             stroke: object._stroke,
-                            layer: layerIndex
+                            layer: layer.index,
+                            layerName: layer.name
                         });
                     },
 
-                    createLine: function (object, layerIndex) {
+                    createLine: function (object, layer) {
                         return angular.extend({}, BASE_SHAPE, {
                             type: '.LineShape',
                             start: {
@@ -41,11 +42,12 @@
                                 y: object.attr('y2')
                             },
                             stroke: object.attr('stroke'),
-                            layer: layerIndex
+                            layer: layer.index,
+                            layerName: layer.name
                         });
                     },
 
-                    createRectangle: function (object, layerIndex) {
+                    createRectangle: function (object, layer) {
                         return angular.extend({}, BASE_SHAPE, {
                             type: '.RectangleShape',
                             position: {
@@ -58,11 +60,12 @@
                             },
                             fill: object.attr('fill'),
                             stroke: object.attr('stroke'),
-                            layer: layerIndex
+                            layer: layer.index,
+                            layerName: layer.name
                         });
                     },
 
-                    createEllipse: function (object, layerIndex) {
+                    createEllipse: function (object, layer) {
                         return angular.extend({}, BASE_SHAPE, {
                             type: '.EllipseShape',
                             position: {
@@ -75,9 +78,23 @@
                             },
                             fill: object.attr('fill'),
                             stroke: object.attr('stroke'),
+                            layer: layer.index,
+                            layerName: layer.name
+                        });
+                    },
+
+                    /*createText: function (object, layerIndex) {
+                        return angular.extend({}, BASE_SHAPE, {
+                            type: '.TextShape',
+                            position: {
+                                x: object.x(),
+                                y: object.y()
+                            },
+                            stroke: object.attr('stroke'),
                             layer: layerIndex
                         });
-                    }
+                    }*/
+
                 };
 
             return shapes;

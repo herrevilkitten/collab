@@ -44,6 +44,9 @@
       <button type="button" class="btn btn-primary" ng-model="drawingMode" btn-radio="'e'">
         <i title="Ellipse" class="fa fa-circle-o"></i>
       </button>
+        <button type="button" class="btn btn-primary" ng-model="drawingMode" btn-radio="'t'">
+            <i title="Ellipse" class="fa fa-font"></i>
+        </button>
     </div>
   </div>
   <div id="selectToolbox" class="toolbox" ng-show="mode === 's'">
@@ -111,6 +114,8 @@
         </div>
     </div>
 </div>
+<input id="commentEntry" type="text" ng-show="isCommenting" ng-enter ng-model="nextCommentStr" />
+
 
 <script type="text/javascript">
   //Change the height of the containing div

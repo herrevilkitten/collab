@@ -11,6 +11,7 @@
         MODE_DRAWING_LINE = 'l',
         MODE_DRAWING_RECT = 'r',
         MODE_DRAWING_OVAL = 'e',
+        MODE_DRAWING_TEXT = 't',
 
         KEY_SHIFT = 16,
         KEY_ESCAPE = 27,
@@ -36,6 +37,9 @@
                     for(var i=0; i<=((shape.layer+1)-$scope.layers.length); i+=1){
                         $scope.command.addNewLayer();
                     }
+                }
+                if ($scope.layers[shape.layer].name != shape.layerName) {
+                    $scope.layers[shape.layer].name = shape.layerName;
                 }
 
                 switch (shape.type) {
@@ -140,7 +144,8 @@
                 $scope.showLayer = true;/*function(index) {
                     return false;
                 };*/
-				$scope.altLayerName = "";
+                $scope.altLayerName = "";
+                $scope.nextCommentStr = "";
 				$scope.editLayerNameMode = -1;
                 $scope.boardId = CurrentBoard;
                 $scope.board = null;
@@ -148,6 +153,7 @@
                 $scope.selected = null;
                 $scope.selectMode = "select";
                 $scope.manipulationReady = false;
+                $scope.isCommenting = false;
                 $scope.uuid = null;
                 $scope.mode = MODE_DRAWING;
                 $scope.drawingMode = MODE_DRAWING_PENCIL;
@@ -509,6 +515,12 @@
                                     originalX: x,
                                     originalY: y
                                 }).move(x, y);
+                            } else if ($scope.drawingMode === MODE_DRAWING_TEXT) {
+                                $scope.isCommenting = true;
+                                $('#commentEntry').css({
+                                    left: x,
+                                    top: (y+29)
+                                });
                             }
                         }
                     });
@@ -544,16 +556,16 @@
                     window.console.log('Adding action:', action);
                     switch (action.type) {
                         case 'path':
-                            shape = ShapeFactory.createPath(action, $scope.currentLayer);
+                            shape = ShapeFactory.createPath(action, $scope.layers[$scope.currentLayer]);
                             break;
                         case 'line':
-                            shape = ShapeFactory.createLine(action, $scope.currentLayer);
+                            shape = ShapeFactory.createLine(action, $scope.layers[$scope.currentLayer]);
                             break;
                         case 'rect':
-                            shape = ShapeFactory.createRectangle(action, $scope.currentLayer);
+                            shape = ShapeFactory.createRectangle(action, $scope.layers[$scope.currentLayer]);
                             break;
                         case 'ellipse':
-                            shape = ShapeFactory.createEllipse(action, $scope.currentLayer);
+                            shape = ShapeFactory.createEllipse(action, $scope.layers[$scope.currentLayer]);
                             break;
                     }
                     message = MessageFactory.createAddShape(shape);
@@ -605,11 +617,28 @@
 		.directive('ngEnter', function () {
 			return function (scope, element, attrs) {
 				element.bind("keydown keypress", function (event) {
-					if(event.which === 13) {
-						scope.layers[scope.editLayerNameMode].name = scope.altLayerName;
-						scope.editLayerNameMode = -1;
+				    if (event.which === 13) {
+				        if (scope.editLayerNameMode != -1) {
+				            scope.layers[scope.editLayerNameMode].name = scope.altLayerName;
+				            scope.editLayerNameMode = -1;
 
-						event.preventDefault();
+				            event.preventDefault();
+				        }
+				        else if (scope.isCommenting) {
+				            var pos = document.getElementById('commentEntry').getBoundingClientRect();
+				            var x = pos.left+10;
+				            var y = pos.top-32;
+				            var shape = scope.canvas.children()[scope.currentLayer].text(document.getElementById('commentEntry').value).attr({
+				                stroke: scope.color.foreground,
+				                originalX: x,
+				                originalY: y
+				            }).move(x, y);
+				            shape.layer = 0;
+
+				            scope.isCommenting = false;
+				            scope.nextCommentStr = "";
+				            document.getElementById('commentEntry').value = "";
+				        }
 					}
 				});
 			};
