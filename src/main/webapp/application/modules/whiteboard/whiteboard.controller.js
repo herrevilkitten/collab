@@ -137,11 +137,17 @@
                 $scope.board = null;
                 $scope.user = {id: 0};
                 $scope.selected = null;
+                $scope.selectMode = "select";
+                $scope.manipulationReady = false;
                 $scope.uuid = null;
                 $scope.mode = MODE_DRAWING;
                 $scope.drawingMode = MODE_DRAWING_PENCIL;
                 $scope.strokes = [];
-                $scope.canvas = SVG('canvas').size(1920, 1080);
+                $scope.defaultCanvasSize = {
+                    height: 1080,
+                    width: 1920
+                };
+                $scope.canvas = SVG('canvas').size($scope.defaultCanvasSize.width, $scope.defaultCanvasSize.height);
 					$scope.canvas.group();
                 $scope.toolboxSide = 'left';
                 console.log('scope', $scope);
@@ -291,8 +297,8 @@
 							var origWidth = $scope.canvas.attr("width");
 							//var origWidthInt = parseInt(origWidth.substring(0, origWidth.length));
 							
-							var newHeight = origHeight + (origHeight * zoomFactor);
-							var newWidth = origWidth + (origWidth * zoomFactor);
+							var newHeight = origHeight + ($scope.defaultCanvasSize.height * zoomFactor);
+							var newWidth = origWidth + ($scope.defaultCanvasSize.width * zoomFactor);
 							$scope.canvas.attr({
 								width: newWidth,
 								height: newHeight
@@ -302,7 +308,7 @@
                     });
                 });
 
-                svgElement.on('mousemove touchmove', function (e) {
+				svgElement.on('mousemove touchmove', function (e) {
                     $scope.$apply(function () {
                         var x,
                             y,
@@ -318,8 +324,8 @@
                             x = e.originalEvent.changedTouches[0].pageX - position.left;
                             y = e.originalEvent.changedTouches[0].pageY - position.top;
                         } else {
-                            x = e.pageX;
-                            y = e.pageY;
+                            x = e.pageX + 5;
+                            y = e.pageY - 45;
                         }
                         if (isDown) {
                             if ($scope.mode === MODE_COMMAND) {
@@ -347,7 +353,7 @@
                                     attr = shape.attr();
                                     originalX = attr.originalX;
                                     originalY = attr.originalY;
-                                    width = Math.abs(originalX - x);
+                                    width = Math.abs(originalX - x );
                                     height = Math.abs(originalY - y);
                                     newX = originalX;
                                     newY = originalY;
@@ -379,6 +385,9 @@
                                         stroke: $scope.color.foreground
                                     });
                                 }
+                            } else if ($scope.mode === MODE_SELECT && $scope.selectMode === "move" && $scope.selected != null) {
+                                //do something for move
+                                //$scope.selected.move(x, y);
                             }
                         }
                     });
@@ -393,52 +402,60 @@
                             x = e.originalEvent.changedTouches[0].pageX - position.left;
                             y = e.originalEvent.changedTouches[0].pageY - position.top;
                         } else {
-                            x = e.pageX;
-                            y = e.pageY;
+                            x = e.pageX + 5;
+                            y = e.pageY - 45;
+
+                            $log.info("The x loc: " + x + " the y loc: " + y);
                         }
 
                         if ($scope.mode === MODE_SELECT) {
-                            $log.info('Select');
-                            var children = $scope.canvas.children()[$scope.currentLayer].children();
-                            var topChild = null;
-                            var foundSelected = false;
-                            var firstChild = null;
-                            for (var i = 0; i < children.length; ++i) {
-                                if (!children[i].attr('not-selectable') && children[i].inside(x, y)) {
-                                    if (!firstChild) {
-                                        firstChild = children[i];
-                                    }
-                                    window.console.log('Inside:', children[i]);
-                                    if ($scope.selected) {
-                                        window.console.log('Parent:', $scope.selected.cloneParent)
-                                    }
-                                    if (!$scope.selected || ($scope.selected && foundSelected)) {
-                                        topChild = children[i];
-                                        break;
-                                    } else if (children[i] === $scope.selected.cloneParent) {
-                                        window.console.log('Found selected');
-                                        foundSelected = true;
+                            if ($scope.selectMode === "select") {
+                                $log.info('Select');
+                                var children = $scope.canvas.children()[$scope.currentLayer].children();
+                                var topChild = null;
+                                var foundSelected = false;
+                                var firstChild = null;
+                                for (var i = 0; i < children.length; ++i) {
+                                    if (!children[i].attr('not-selectable') && children[i].inside(x, y)) {
+                                        if (!firstChild) {
+                                            firstChild = children[i];
+                                        }
+                                        window.console.log('Inside:', children[i]);
+                                        if ($scope.selected) {
+                                            window.console.log('Parent:', $scope.selected.cloneParent)
+                                        }
+                                        if (!$scope.selected || ($scope.selected && foundSelected)) {
+                                            topChild = children[i];
+                                            break;
+                                        } else if (children[i] === $scope.selected.cloneParent) {
+                                            window.console.log('Found selected');
+                                            foundSelected = true;
+                                        }
                                     }
                                 }
-                            }
-                            if ($scope.selected) {
-                                $scope.selected.remove();
-                                $scope.selected = null;
-                                if (topChild === null) {
-                                    window.console.log('No topChild, using firstChild');
-                                    topChild = firstChild;
+                                if ($scope.selected) {
+                                    $scope.selected.remove();
+                                    $scope.selected = null;
+                                    if (topChild === null) {
+                                        window.console.log('No topChild, using firstChild');
+                                        topChild = firstChild;
+                                    }
                                 }
-                            }
-                            if (topChild !== null) {
-                                window.console.log('Top child is', topChild);
-                                $scope.selected = topChild.clone();
-                                $scope.selected.attr({
-                                    stroke: '#00F',
-                                    'stroke-width': 2,
-                                    'fill-opacity': 0,
-                                    'not-selectable': true
-                                });
-                                $scope.selected.cloneParent = topChild;
+                                if (topChild !== null) {
+                                    window.console.log('Top child is', topChild);
+                                    $scope.selected = topChild.clone();
+                                    $scope.selected.attr({
+                                        stroke: '#00F',
+                                        'stroke-width': 2,
+                                        'fill-opacity': 0,
+                                        'not-selectable': true
+                                    });
+                                    $scope.selected.cloneParent = topChild; 
+                                }
+                            } else if ($scope.selectMode === "move") {
+                                //$scope.selected.cloneParent.attr({ "visibility": "hidden" });
+                                //shape = $scope.selected;
+                                //do something for move here
                             }
 
                         } else if ($scope.mode === MODE_COMMAND) {
@@ -486,6 +503,7 @@
 
                 svgElement.on('mouseup touchend', function (e) {
                     $scope.$apply(function () {
+                        isDown = false;
                         $log.info('mouseUp:', e, $scope.mode);
                         if (shape === null && path === null) {
                             return;
@@ -493,11 +511,15 @@
                         if ($scope.mode === MODE_COMMAND) {
                             strokes[strokes.length] = path;
                         }
+                        if ($scope.mode === MODE_SELECT) {
+                           
+                        }
 
                         $scope.addAction(shape || path);
                         path = null;
                         shape = null;
-                        isDown = false;
+                       
+                        
                     });
 
                 });

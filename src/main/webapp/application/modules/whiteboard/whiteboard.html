@@ -46,7 +46,19 @@
       </button>
     </div>
   </div>
-  <div id="selectToolbox" class="toolbox" ng-show="mode === 's'">Select</div>
+  <div id="selectToolbox" class="toolbox" ng-show="mode === 's'">
+      <div class="btn-group-vertical">
+          <button type="button" class="btn btn-primary" ng-click="selectMode = 'select'">
+              <i title="select" class="fa fa-hand-o-up"></i>
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="selectMode = 'move'">
+              <i title="move" class="fa fa-arrows"></i>
+          </button>
+          <button type="button" class="btn btn-primary" ng-click="selectMode = 'resize'">
+              <i title="resize" class="fa fa-home"></i>
+          </button>
+      </div>
+  </div>
   <div id="commandToolbox" class="toolbox" ng-show="mode === 'c'">
     <div class="btn-group-vertical">
       <button type="button" class="btn btn-primary" ng-click="command.home()">
