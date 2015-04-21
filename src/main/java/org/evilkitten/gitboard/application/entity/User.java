@@ -10,7 +10,6 @@ public class User {
     @JsonIgnore
     private String email;
 
-    @JsonIgnore
     private String displayName;
 
     @JsonIgnore

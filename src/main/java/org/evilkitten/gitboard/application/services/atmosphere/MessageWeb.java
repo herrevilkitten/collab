@@ -38,6 +38,8 @@ public class MessageWeb extends HttpServlet {
     @Ready(encoders = {JacksonEncoder.class})
     public WelcomeMessage onReady(final AtmosphereResource resource) {
         User user = (User) resource.session().getAttribute("session.user");
+        resource.session().setAttribute("session.socket", resource);
+
         String broadcasterId = resource.getBroadcaster().getID();
         LOG.info("Browser {} ({}) connected to {}", resource.uuid(), user, broadcasterId);
 
@@ -57,6 +59,7 @@ public class MessageWeb extends HttpServlet {
 
     @Disconnect
     public void onDisconnect(AtmosphereResourceEvent event) {
+        event.getResource().session().removeAttribute("session.socket");
         if (event.isCancelled()) {
             LOG.info("Browser {} unexpectedly disconnected", this, event.getResource().uuid());
         } else {
@@ -70,15 +73,12 @@ public class MessageWeb extends HttpServlet {
         String json = resource.getRequest().body().asString();
 
         GitboardMessage message = (GitboardMessage) jsonTranscoder.fromJson(json, GitboardMessage.class);
+        message.setUuid(resource.uuid());
+
         if (message instanceof ActionMessage) {
             ((ActionMessage) message).setActor(user);
         }
 
-        LOG.info("Last session access for {}: {}", resource.uuid(), resource.session().getLastAccessedTime());
-        LOG.info("Json is    {}", resource.getRequest().body().asString());
-        LOG.info("Message is {}", message);
-        LOG.info("{} sent [#{} {}] {}", user, message.getBoardId(),
-            message.getClass().getSimpleName(), message.toString());
         Whiteboard whiteboard = whiteboardService.getRawById(message.getBoardId());
         if (message instanceof AddShapeMessage) {
             whiteboardService.addShapeToWhiteboard(((AddShapeMessage) message).getShape(), whiteboard);

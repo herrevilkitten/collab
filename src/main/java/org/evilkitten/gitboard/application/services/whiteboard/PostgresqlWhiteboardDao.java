@@ -84,7 +84,13 @@ public class PostgresqlWhiteboardDao implements WhiteboardDao {
 
     @Override
     public BaseShape addShapeToWhiteboard(BaseShape shape, Whiteboard whiteboard) {
-        Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.addShapeToWhiteboard"));
+        Statement statement;
+        if (shape.getBoardShapeId() != null) {
+            statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.addOldShapeToWhiteboard"));
+            statement.set("boardShapeId", shape.getBoardShapeId());
+        } else {
+            statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.addShapeToWhiteboard"));
+        }
         statement.set("board", whiteboard.getId());
         statement.set("json", jsonTranscoder.toJson(shape));
 
@@ -106,5 +112,37 @@ public class PostgresqlWhiteboardDao implements WhiteboardDao {
         Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.getShapesForWhiteboard"));
         statement.set("board", id);
         return statement.queryForRows(dataSource, new ShapeRowMapper(jsonTranscoder));
+    }
+
+    @Override
+    public void removeShape(BaseShape shape) {
+        Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.removeShape"));
+        statement.set("id", shape.getId());
+        statement.update(dataSource);
+    }
+
+    @Override
+    public void removeShapeFromWhiteboard(BaseShape shape, Whiteboard whiteboard) {
+        Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.removeShapeFromWhiteboard"));
+        statement.set("boardId", whiteboard.getId());
+        statement.set("boardShapeId", shape.getBoardShapeId());
+        statement.update(dataSource);
+    }
+
+    @Override
+    public void updateShape(BaseShape shape) {
+        Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.updateShape"));
+        statement.set("id", shape.getId());
+        statement.set("json", jsonTranscoder.toJson(shape));
+        statement.update(dataSource);
+    }
+
+    @Override
+    public void updateShapeOnWhiteboard(BaseShape shape, Whiteboard whiteboard) {
+        Statement statement = new Statement(config.getString("gitboard.private.database.sql.whiteboard.updateShapeOnWhiteboard"));
+        statement.set("boardId", whiteboard.getId());
+        statement.set("boardShapeId", shape.getBoardShapeId());
+        statement.set("json", jsonTranscoder.toJson(shape));
+        statement.update(dataSource);
     }
 }

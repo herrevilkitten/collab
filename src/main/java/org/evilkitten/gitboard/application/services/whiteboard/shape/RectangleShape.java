@@ -2,9 +2,10 @@ package org.evilkitten.gitboard.application.services.whiteboard.shape;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
-
+@ToString(callSuper = true)
 public class RectangleShape extends BaseShape {
     private String fill;
 

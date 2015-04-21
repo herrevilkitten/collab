@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
@@ -18,6 +19,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.evilkitten.gitboard.application.entity.User;
+import org.evilkitten.gitboard.application.services.json.JsonTranscoder;
 import org.glassfish.jersey.server.mvc.Viewable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,12 @@ import org.slf4j.LoggerFactory;
 @Path("/")
 public class JspWeb {
     private static final Logger LOG = LoggerFactory.getLogger(JspWeb.class);
+    private final JsonTranscoder jsonTranscoder;
+
+    @Inject
+    public JspWeb(JsonTranscoder jsonTranscoder) {
+        this.jsonTranscoder = jsonTranscoder;
+    }
 
     @GET
     @Path("/view")
@@ -38,6 +47,7 @@ public class JspWeb {
 
         model.put("state", state);
         model.put("baseUrl", calculateBaseUrl(request));
+        model.put("user", jsonTranscoder.toJson(session.getAttribute("session.user")));
 
         return new Viewable("/WEB-INF/views/main", model);
     }
