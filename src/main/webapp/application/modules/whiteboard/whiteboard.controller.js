@@ -97,6 +97,9 @@
                             '__shape_id': shape.boardShapeId
                         });
                     break;
+                default:
+                    $log.error('Do not know how to handle shape', shape);
+                    return;
                 }
             }
 
@@ -379,7 +382,7 @@
                         $scope.canvas.attr({
                             width: newWidth,
                             height: newHeight
-                        })
+                        });
                         event.preventDefault();
                     }
                 });
@@ -446,8 +449,7 @@
                                 shape.size(width, height);
                                 shape.attr({
                                     fill: $scope.color.fill,
-                                    stroke: $scope.color.foreground,
-                                    class: 'layer' + ($scope.layers.length - 1)
+                                    stroke: $scope.color.foreground
                                 });
                             } else if ($scope.drawingMode === MODE_DRAWING_OVAL) {
                                 attr = shape.attr();
@@ -540,27 +542,33 @@
                             fill: 'none',
                             stroke: '#0000ff',
                             'stroke-width': 2
-                        }).L(x, y);
+                        }).M(x, y);
                         points[points.length] = new window.Point(x, y, strokes.length);
-                    } else if ($scope.mode === MODE_DRAWING && (shape || path)) {
+                    } else if ($scope.mode === MODE_DRAWING) {
                         if ($scope.drawingMode === MODE_DRAWING_PENCIL) {
                             path = $scope.canvas.children()[$scope.currentLayer].path().attr({
                                 fill: 'none',
                                 stroke: $scope.color.foreground,
                                 'stroke-width': 1
-                            }).L(x, y);
+                            }).M(x, y);
                         } else if ($scope.drawingMode === MODE_DRAWING_LINE) {
                             shape = $scope.canvas.children()[$scope.currentLayer].line(x, y, x, y).attr({
                                 fill: $scope.color.fill,
                                 stroke: $scope.color.foreground,
                                 x2: x,
-                                y2: y
+                                y2: y,
+                                originalX: x,
+                                originalY: y
                             });
                         } else if ($scope.drawingMode === MODE_DRAWING_RECT) {
                             shape = $scope.canvas.children()[$scope.currentLayer].rect(1, 1).attr({
                                 fill: $scope.color.fill,
-                                stroke: $scope.color.foreground
+                                stroke: $scope.color.foreground,
+                                'stroke-width': 1,
+                                originalX: x,
+                                originalY: y
                             });
+                            shape.move(x, y);
                         } else if ($scope.drawingMode === MODE_DRAWING_OVAL) {
                             shape = $scope.canvas.children()[$scope.currentLayer].ellipse(1, 1).attr({
                                 fill: $scope.color.fill,
@@ -578,45 +586,6 @@
                         }
                     }
                 });
-            });
-
-            svgElement.on('mouseup touchend', function(e) {
-                $scope.$apply(function() {
-                    isDown = false;
-                    $log.info('mouseUp:', e, $scope.mode);
-                    if (shape === null && path === null) {
-                        return;
-                    }
-                    if ($scope.selected) {
-                        $scope.selected.remove();
-                        $scope.selected = null;
-                        if (topChild === null) {
-                            window.console.log('No topChild, using firstChild');
-                            topChild = firstChild;
-                        }
-                    }
-                    if (topChild !== null) {
-                        window.console.log('Top child is', topChild);
-                        $scope.selected = topChild.clone();
-                        $scope.selected.attr({
-                            stroke: '#00F',
-                            'stroke-width': 2,
-                            'fill-opacity': 0,
-                            'not-selectable': true
-                        });
-                        $scope.selected.cloneParent = topChild;
-                    }
-                    if ($scope.mode === MODE_SELECT) {
-
-                    }
-
-                    $scope.addAction(shape || path);
-                    path = null;
-                    shape = null;
-
-
-                });
-
             });
 
             svgElement.on('mouseup touchend', function(e) {
@@ -643,17 +612,20 @@
                 window.console.log('Adding action:', action);
                 switch (action.type) {
                 case 'path':
-                    shape = ShapeFactory.createPath(action);
+                    shape = ShapeFactory.createPath(action, $scope.layers[$scope.currentLayer]);
                     break;
                 case 'line':
-                    shape = ShapeFactory.createLine(action);
+                    shape = ShapeFactory.createLine(action, $scope.layers[$scope.currentLayer]);
                     break;
                 case 'rect':
-                    shape = ShapeFactory.createRectangle(action);
+                    shape = ShapeFactory.createRectangle(action, $scope.layers[$scope.currentLayer]);
                     break;
                 case 'ellipse':
-                    shape = ShapeFactory.createEllipse(action);
+                    shape = ShapeFactory.createEllipse(action, $scope.layers[$scope.currentLayer]);
                     break;
+                default:
+                    $log.error('Do not know how to handle', action);
+                    return;
                 }
                 message = MessageFactory.createAddShape(shape);
                 $scope.socket.publish(message);
