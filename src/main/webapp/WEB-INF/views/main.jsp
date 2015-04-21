@@ -56,7 +56,6 @@
 
 <!-- angular-toastr -->
 <script src="bower_components/angular-toastr/dist/angular-toastr.js" type="text/javascript"></script>
-<script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js" type="text/javascript"></script>
 
 <script src="application/app.js"></script>
 <script src="application/modules/user/UserModule.js"></script>

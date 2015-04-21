@@ -27,4 +27,12 @@ public interface WhiteboardService {
     Set<BaseShape> merge(int branchId);
 
     DiffNode findDifferences(int sourceId, int destinationId);
+
+    void removeShape(BaseShape shape);
+
+    void removeShapeFromWhiteboard(BaseShape shape, Whiteboard whiteboard);
+
+    void updateShape(BaseShape shape);
+
+    void updateShapeOnWhiteboard(BaseShape shape, Whiteboard whiteboard);
 }
