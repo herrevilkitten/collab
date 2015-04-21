@@ -38,6 +38,8 @@ public class MessageWeb extends HttpServlet {
     @Ready(encoders = {JacksonEncoder.class})
     public WelcomeMessage onReady(final AtmosphereResource resource) {
         User user = (User) resource.session().getAttribute("session.user");
+        resource.session().setAttribute("session.socket", resource);
+
         String broadcasterId = resource.getBroadcaster().getID();
         LOG.info("Browser {} ({}) connected to {}", resource.uuid(), user, broadcasterId);
 
@@ -57,6 +59,7 @@ public class MessageWeb extends HttpServlet {
 
     @Disconnect
     public void onDisconnect(AtmosphereResourceEvent event) {
+        event.getResource().session().removeAttribute("session.socket");
         if (event.isCancelled()) {
             LOG.info("Browser {} unexpectedly disconnected", this, event.getResource().uuid());
         } else {

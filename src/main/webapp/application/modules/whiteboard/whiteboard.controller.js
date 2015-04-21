@@ -58,7 +58,8 @@
                         stroke: shape.stroke,
                         'stroke-width': 1,
                         '__id': shape.id,
-                        'class': 'layer' + shape.layer
+                        'class': 'layer' + shape.layer,
+                        '__shape_id': shape.boardShapeId
                     });
                     break;
 
@@ -68,7 +69,8 @@
                             stroke: shape.stroke,
                             'stroke-width': 1,
                             '__id': shape.id,
-                            'class': 'layer' + shape.layer
+                            'class': 'layer' + shape.layer,
+                            '__shape_id': shape.boardShapeId
                         });
                     break;
 
@@ -79,7 +81,8 @@
                             fill: shape.fill,
                             stroke: shape.stroke,
                             '__id': shape.id,
-                            'class': 'layer' + shape.layer
+                            'class': 'layer' + shape.layer,
+                            '__shape_id': shape.boardShapeId
                         });
                     break;
 
@@ -90,7 +93,8 @@
                             fill: shape.fill,
                             stroke: shape.stroke,
                             '__id': shape.id,
-                            'class': 'layer' + shape.layer
+                            'class': 'layer' + shape.layer,
+                            '__shape_id': shape.boardShapeId
                         });
                     break;
                 }
@@ -130,7 +134,14 @@
                 }
             }
 
-            $scope.boardId = $routeParams.boardId;
+            $scope.color = {
+                foreground: 'rgba(0, 0, 0, 1)',
+                fill: 'rgba(255, 255, 255, 1)',
+                complementary: function(color) {
+                    return new SVG.Color(color).complementary();
+                }
+            };
+            $scope.boardId = CurrentBoard;
             $scope.board = null;
             $scope.user = CurrentUser;
             $scope.selected = null;
