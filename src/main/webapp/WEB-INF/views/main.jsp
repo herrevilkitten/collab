@@ -77,6 +77,8 @@
 <!-- inline -->
 <script type="text/javascript">
     window.user = ${it.user};
+
+	document.getElementById("userName").innerHTML = window.user.displayName.substring(0,window.user.displayName.length-10);
 </script>
 </body>
 </html>
