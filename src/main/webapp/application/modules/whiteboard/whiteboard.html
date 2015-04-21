@@ -118,6 +118,17 @@
   </div>
 </div>
 <input id="commentEntry" type="text" ng-show="isCommenting" ng-enter ng-model="nextCommentStr"/>
+<div id="chatStreamContainer" ng-class="{'isOpen': chatStreamOpen, 'isClosed':!chatStreamOpen}">
+    <div id="chatStreamHeader" ng-click="chatStreamOpen=!chatStreamOpen">
+        <span id="chatStreamTitle">Chat Stream</span>
+    </div>
+    <div id="chatStreamContent">
+
+    </div>
+    <div id="chatStreamInput">
+        <input id="chatInput" type="text" ng-enter ng-model="chatStringEntry" />
+    </div>
+</div>
 
 <script type="text/javascript">
   //Change the height of the containing div

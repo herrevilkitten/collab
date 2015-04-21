@@ -47,7 +47,16 @@
                             type: MESSAGE_PACKAGE + '.WelcomeMessage',
                             boardId: boardId
                         });
+                    },
+
+                    createChatMessage: function (text) {
+                        return angular.extend({}, BASE_MESSAGE, {
+                            type: MESSAGE_PACKAGE + ".ChatMessage",
+                            boardId: boardId,
+                            chat: text
+                        });
                     }
+
                 };
 
             return messages;

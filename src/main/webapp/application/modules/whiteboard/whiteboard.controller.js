@@ -98,6 +98,16 @@
                             '__shape_id': shape.boardShapeId
                         });
                     break;
+                    case '.TextShape':
+                        $scope.canvas.children()[shape.layer].text(shape.text)
+                        .move(shape.position.x, shape.position.y)
+                        .attr({
+                            stroke: shape.stroke,
+                            '__id': shape.id,
+                            'class': 'layer' + shape.layer,
+                            '__shape_id': shape.boardShapeId
+                        });
+                        break;
                 default:
                     $log.error('Do not know how to handle shape', shape);
                     return;
@@ -122,9 +132,14 @@
                 angular.forEach([message.shape], addShape);
             }
 
+            function onChatMessage(socket, response, message) {
+                $scope.chatStreamOpen = false;
+            }
+
             var messageHandlers = {
                 '.WelcomeMessage': onWelcomeMessage,
-                '.AddShapeMessage': onAddShapeMessage
+                '.AddShapeMessage': onAddShapeMessage,
+                '.ChatMessage': onChatMessage
             };
 
             function onMessage(socket, response, message) {
@@ -169,6 +184,8 @@
                 }
             };
             $scope.currentLayer = 0;
+            $scope.chatStreamOpen = false;
+            $scope.chatStringEntry = "";
             $scope.layerIsVisible = "public/images/eyeIcon.png";
             $scope.layerIsInvisible = "public/images/closedEyeIcon.png";
             $scope.layers = [{index: 0, name: "default layer", visible: true, src: $scope.layerIsVisible}];
@@ -326,6 +343,11 @@
                             $log.error('Unable to fork board:', error);
                         });
                     $scope.mode = MODE_DRAWING;
+                },
+                createChatMessage: function (text) {
+                    var message = MessageFactory.createChatMessage(text);
+                    window.console.log('Sending chat:', message);
+                    $scope.socket.publish(message);
                 }
             };
 
@@ -548,6 +570,7 @@
                                 $scope.selected.cloneParent = topChild;
                             }
                         } else if ($scope.selectMode === "move") {
+                           
                             //$scope.selected.cloneParent.attr({ "visibility": "hidden" });
                             //shape = $scope.selected;
                             //do something for move here
@@ -639,11 +662,16 @@
                 case 'ellipse':
                     shape = ShapeFactory.createEllipse(action, $scope.layers[$scope.currentLayer]);
                     break;
+                case 'text':
+                    shape = ShapeFactory.createText(action, $scope.layers[$scope.currentLayer]);
+                    break;
                 default:
                     $log.error('Do not know how to handle', action);
                     return;
                 }
+                
                 message = MessageFactory.createAddShape(shape);
+                window.console.log('Sending shape:', message);
                 $scope.socket.publish(message);
             };
 
@@ -696,7 +724,7 @@
             return function(scope, element, attrs) {
                 element.bind("keydown keypress", function(event) {
                     if (event.which === 13) {
-                        if (scope.editLayerNameMode != -1) {
+                        if (scope.editLayerNameMode != -1 && !scope.isCommenting && scope.altLayerName != "") {
                             scope.layers[scope.editLayerNameMode].name = scope.altLayerName;
                             scope.editLayerNameMode = -1;
 
@@ -709,13 +737,24 @@
                             var shape = scope.canvas.children()[scope.currentLayer].text(document.getElementById('commentEntry').value).attr({
                                 stroke: scope.color.foreground,
                                 originalX: x,
-                                originalY: y
+                                originalY: y,
+                                text: document.getElementById('commentEntry').value
                             }).move(x, y);
-                            shape.layer = 0;
 
                             scope.isCommenting = false;
                             scope.nextCommentStr = "";
                             document.getElementById('commentEntry').value = "";
+
+                            scope.addAction(shape);
+                            event.preventDefault();
+                        }
+                        else if (document.getElementById("chatInput") == document.activeElement && scope.chatStringEntry != "") {
+                            var inputElem = document.getElementById("chatInput");
+
+                            scope.command.createChatMessage(inputElem.value);
+
+                            inputElem.value = "";
+                            scope.chatStringEntry = "";
                         }
                     }
                 });

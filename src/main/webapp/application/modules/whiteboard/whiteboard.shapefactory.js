@@ -83,17 +83,19 @@
                         });
                     },
 
-                    /*createText: function (object, layerIndex) {
+                    createText: function (object, layer) {
                         return angular.extend({}, BASE_SHAPE, {
                             type: '.TextShape',
+                            text: object.attr('text'),
                             position: {
                                 x: object.x(),
                                 y: object.y()
                             },
                             stroke: object.attr('stroke'),
-                            layer: layerIndex
+                            layer: layer.index,
+                            layerName: layer.name
                         });
-                    }*/
+                    }
 
                 };
 

@@ -56,6 +56,49 @@ div#layerToolbar{
     border-top: 1px solid gray;
 }
 
+div#chatStreamContainer{
+    position: fixed;
+    bottom: 25px;
+    right: 30px;
+
+    width: 200px;
+    cursor: pointer;
+
+    background: #CCCCCC;
+    overflow: hidden;
+}
+div#chatStreamContainer.isOpen{
+    height: 300px;
+}
+div.isClosed{
+    height: 20px;
+}
+div#chatStreamHeader{
+    height: 20px;
+    width: 100%;
+
+    background: #CCCC9A;
+}
+
+div#chatStreamContent{
+    height: 230px;
+    width: 180px;
+    background: white;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    
+    overflow-y: scroll;
+}
+
+div#chatStreamInput{
+    width: 100%;
+    margin-top:5px;
+
+    border-top: 1px solid black;
+}
+
 div.layerRow{
     width:100%;
     height:40px;
@@ -81,6 +124,10 @@ span#layerTitle{
     margin-top: 8px;
 
     color: white;
+}
+
+span#chatStreamTitle{
+    margin-left:60px;
 }
 
 img#closeIcon{
@@ -114,4 +161,9 @@ input#commentEntry{
     top:100px;
     left:100px;
     z-index:50000;
+}
+
+input#chatInput{
+    margin-top: 4px;
+    margin-left: 3px;
 }
