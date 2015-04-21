@@ -17,4 +17,12 @@ public interface WhiteboardDao {
     BaseShape addShapeToWhiteboard(BaseShape shape, Whiteboard whiteboard);
 
     List<BaseShape> getShapesForWhiteboard(Integer id);
+
+    void removeShape(BaseShape shape);
+
+    void removeShapeFromWhiteboard(BaseShape shape, Whiteboard whiteboard);
+
+    void updateShape(BaseShape shape);
+
+    void updateShapeOnWhiteboard(BaseShape shape, Whiteboard whiteboard);
 }

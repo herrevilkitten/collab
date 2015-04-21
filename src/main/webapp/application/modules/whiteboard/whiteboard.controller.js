@@ -47,7 +47,8 @@
                         fill: 'none',
                         stroke: shape.stroke,
                         'stroke-width': 1,
-                        '__id': shape.id
+                        '__id': shape.id,
+                        '__shape_id': shape.boardShapeId
                     });
                     break;
 
@@ -56,7 +57,9 @@
                         .attr({
                             stroke: shape.stroke,
                             'stroke-width': 1,
-                            '__id': shape.id
+                            '__id': shape.id,
+                            '__shape_id': shape.boardShapeId
+
                         });
                     break;
 
@@ -66,7 +69,9 @@
                         .attr({
                             fill: shape.fill,
                             stroke: shape.stroke,
-                            '__id': shape.id
+                            '__id': shape.id,
+                            '__shape_id': shape.boardShapeId
+
                         });
                     break;
 
@@ -76,7 +81,9 @@
                         .attr({
                             fill: shape.fill,
                             stroke: shape.stroke,
-                            '__id': shape.id
+                            '__id': shape.id,
+                            '__shape_id': shape.boardShapeId
+
                         });
                     break;
                 }
@@ -123,7 +130,7 @@
                     return new SVG.Color(color).complementary();
                 }
             };
-            $scope.boardId = $routeParams.boardId;
+            $scope.boardId = CurrentBoard;
             $scope.board = null;
             $scope.user = CurrentUser;
             $scope.selected = null;

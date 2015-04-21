@@ -107,7 +107,6 @@ public class DefaultWhiteboardService implements WhiteboardService {
         LOG.info("Differences are: {}", branchRoot);
 
         final WhiteboardDifferences branchDifferences = new WhiteboardDifferences();
-        final List<DiffNode> branchChanges = new ArrayList<>();
         branchRoot.visit(new DiffNode.Visitor() {
             public void node(DiffNode node, Visit visit) {
                 LOG.info("{} => {}", node.getPath(), node.getState());
@@ -136,7 +135,6 @@ public class DefaultWhiteboardService implements WhiteboardService {
                     final String message = node.getPath() + " changed from " +
                         baseValue + " to " + workingValue;
                     LOG.info(message);
-                    branchChanges.add(node);
                     visit.dontGoDeeper();
                 }
             }
@@ -150,7 +148,6 @@ public class DefaultWhiteboardService implements WhiteboardService {
         LOG.info("Differences are: {}", parentRoot);
 
         final WhiteboardDifferences parentDifferences = new WhiteboardDifferences();
-        final List<DiffNode> parentChanges = new ArrayList<>();
         parentRoot.visit(new DiffNode.Visitor() {
             public void node(DiffNode node, Visit visit) {
                 LOG.info("{} => {}", node.getPath(), node.getState());
@@ -179,7 +176,6 @@ public class DefaultWhiteboardService implements WhiteboardService {
                     final String message = node.getPath() + " changed from " +
                         baseValue + " to " + workingValue;
                     LOG.info(message);
-                    parentChanges.add(node);
                     visit.dontGoDeeper();
                 }
             }
@@ -258,6 +254,24 @@ public class DefaultWhiteboardService implements WhiteboardService {
 
         LOG.info("Differences: {}", branchDifferences);
         LOG.info("Conflicts:   {}", conflicts);
+
+        if (conflicts.isEmpty()) {
+            LOG.info("No merge conflicts.");
+            LOG.info("Adding new shapes.");
+            for (BaseShape addedShape : branchDifferences.getAdditions()) {
+                whiteboardDao.addShapeToWhiteboard(addedShape, parent);
+            }
+
+            LOG.info("Changing shapes.");
+            for (BaseShape changedShape : branchDifferences.getChanges()) {
+                whiteboardDao.updateShapeOnWhiteboard(changedShape, parent);
+            }
+
+            LOG.info("Removing shapes.");
+            for (BaseShape removedShape : branchDifferences.getRemovals()) {
+                whiteboardDao.removeShapeFromWhiteboard(removedShape, parent);
+            }
+        }
 
         return conflicts;
     }
