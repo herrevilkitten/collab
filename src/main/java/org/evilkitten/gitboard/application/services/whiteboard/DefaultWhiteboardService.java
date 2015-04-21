@@ -305,4 +305,25 @@ public class DefaultWhiteboardService implements WhiteboardService {
         LOG.info("Changes: {}", changes);
         return root;
     }
+
+    @Override
+    public void removeShape(BaseShape shape) {
+        whiteboardDao.removeShape(shape);
+    }
+
+    @Override
+    public void removeShapeFromWhiteboard(BaseShape shape, Whiteboard whiteboard) {
+        whiteboardDao.removeShapeFromWhiteboard(shape, whiteboard);
+
+    }
+
+    @Override
+    public void updateShape(BaseShape shape) {
+        whiteboardDao.updateShape(shape);
+    }
+
+    @Override
+    public void updateShapeOnWhiteboard(BaseShape shape, Whiteboard whiteboard) {
+        whiteboardDao.updateShapeOnWhiteboard(shape, whiteboard);
+    }
 }

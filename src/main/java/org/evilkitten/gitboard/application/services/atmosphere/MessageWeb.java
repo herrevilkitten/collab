@@ -14,6 +14,7 @@ import org.evilkitten.gitboard.application.entity.User;
 import org.evilkitten.gitboard.application.services.atmosphere.message.ActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.AddShapeMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.GitboardMessage;
+import org.evilkitten.gitboard.application.services.atmosphere.message.RemoveShapeMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.WelcomeMessage;
 import org.evilkitten.gitboard.application.services.json.JsonTranscoder;
 import org.evilkitten.gitboard.application.services.whiteboard.Whiteboard;
@@ -83,6 +84,8 @@ public class MessageWeb extends HttpServlet {
         if (message instanceof AddShapeMessage) {
             whiteboardService.addShapeToWhiteboard(((AddShapeMessage) message).getShape(), whiteboard);
             resource.getBroadcaster().broadcast(jsonTranscoder.toJson(message));
+        } else if (message instanceof RemoveShapeMessage) {
+//            whiteboardService.removeShape(((RemoveShapeMessage) message).getShapeId());
         }
     }
 }

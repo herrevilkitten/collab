@@ -9,7 +9,7 @@
     ]);
 
     console.log('Setting up angular application');
-    angular.module('gitboard', [ 'ngRoute', 'gitboard.modules', 'colorpicker.module', 'xeditable' ])
+    angular.module('gitboard', [ 'ngRoute', 'gitboard.modules', 'colorpicker.module', 'xeditable', 'toastr' ])
         .config(function($routeProvider, $locationProvider) {
             $locationProvider.html5Mode(true);
 

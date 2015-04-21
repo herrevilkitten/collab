@@ -31,6 +31,7 @@
                                                      MessageFactory,
                                                      ShapeFactory,
                                                      SocketFactory,
+                                                     toastr,
                                                      Whiteboard) {
             function addShape(shape) {
                 var segments;
@@ -137,6 +138,14 @@
                 }
             }
 
+            function openSocket() {
+                $scope.socket = SocketFactory
+                    .createSocket($scope.boardId)
+                    .onMessage(onMessage)
+                    .onError(SocketFactory.reconnectOnErrorHandler)
+                    .open();
+            }
+
             $scope.color = {
                 foreground: 'rgba(0, 0, 0, 1)',
                 fill: 'rgba(255, 255, 255, 1)',
@@ -144,7 +153,7 @@
                     return new SVG.Color(color).complementary();
                 }
             };
-            $scope.boardId = CurrentBoard;
+            $scope.boardId = $routeParams.boardId;
             $scope.board = null;
             $scope.user = CurrentUser;
             $scope.selected = null;
@@ -252,6 +261,9 @@
                     Whiteboard
                         .copy($scope.boardId)
                         .then(function(response) {
+                            $scope.boardId = response.data.id;
+                            $scope.socket.close();
+                            openSocket();
                             $location.path('board/' + response.data.id);
                         })
                         .catch(function(error) {
@@ -263,6 +275,9 @@
                     Whiteboard
                         .fork($scope.boardId)
                         .then(function(response) {
+                            $scope.boardId = response.data.id;
+                            $scope.socket.close();
+                            openSocket();
                             $location.path('board/' + response.data.id);
                         })
                         .catch(function(error) {
@@ -275,6 +290,7 @@
                         .merge($scope.boardId)
                         .then(function(response) {
                             $log.info("Response:", response);
+                            toastr.info('Successfully merged changes back into parent board.');
                         })
                         .catch(function(error) {
                             var modalInstance;
@@ -635,11 +651,8 @@
                 $scope.socket.publish(MessageFactory.createHeartbeat());
             }, 90000);
 
-            $scope.socket = SocketFactory
-                .createSocket($scope.boardId)
-                .onMessage(onMessage)
-                .onError(SocketFactory.reconnectOnErrorHandler)
-                .open();
+
+            openSocket();
 
             $scope.$on('$destroy', function() {
                 $scope.socket.close();
