@@ -46,9 +46,12 @@
 <div ng-controller="UserController" id="banner" style="position:relative; z-index:4000;">
 	<img id="logo" style="position:absolute; top:8px; left:10px; height:40px; width:40px;" src="public/images/collab.png"/>
   
-	<span id="userName" ng-click="signOut()" style="float:right; font-weight:bolder; font-size:20px; margin-right:8px; margin-top:9px; cursor:pointer;">DorraExploradora</span>
+  	<div id="userBannerContainer" style="float:right; margin-right:8px; margin-top:0px;">
+		<span id="userName" style="font-weight:bolder; font-size:20px; display:block; margin-top:5px;">DoraExploradora</span>
+		<span id="signoutLink" ng-click="signOut()" style="cursor:pointer; position:relative; display:block; position:relative; top:-4px; right:0px; color:blue;">Signout</span>
+	</div>
 	<img id="profilePic" style="float:right; width:37px; height:37px; margin-right:8px; margin-top:8px; " src="public/images/blankProfilePic.png" />
-	<img id="cornerTab" style="position:absolute; width:20px; height:20px; top:30px; right:0px;" src="public/images/cornerTab.png" />
+	<!--<img id="cornerTab" style="position:absolute; width:20px; height:20px; top:30px; right:0px;" src="public/images/cornerTab.png" />-->
 </div>
 
 <div ng-view></div>
