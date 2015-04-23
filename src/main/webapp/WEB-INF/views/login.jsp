@@ -2,7 +2,7 @@
 <html ng-app="svb">
 <head>
     <base href="${it.baseUrl}"/>
-    <title>ColLab</title>
+    <title>gitboard</title>
 
     <meta name="google-signin-clientid" content="114100310474.apps.googleusercontent.com"/>
     <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login email"/>
@@ -63,7 +63,7 @@
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(po, s);
     })();
-
+	
     function signinCallback(authResult) {
         'use strict';
 

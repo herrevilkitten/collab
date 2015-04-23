@@ -17,8 +17,8 @@
   <div id="colorToolbox" class="colorToolbox">
     <div class="btn-group-vertical">
       <button class="btn btn-primary" ng-style="{'background-color': color.foreground, color: color.foreground}"
-              colorpicker="rgba" colorpicker-position="right" colorpicker-parent="true" colorpicker-fixed-position="true"
-              ng-model="color.foreground">
+              colorpicker="rgba" colorpicker-position="right" colorpicker-parent="true"
+              colorpicker-fixed-position="true" ng-model="color.foreground">
         <i title="Select" class="fa fa-square"></i>
       </button>
       <button class="btn btn-primary" ng-style="{'background-color': color.fill, color: color.fill}" colorpicker="rgba"
@@ -43,21 +43,117 @@
       <button type="button" class="btn btn-primary" ng-model="drawingMode" btn-radio="'e'">
         <i title="Ellipse" class="fa fa-circle-o"></i>
       </button>
+      <button type="button" class="btn btn-primary" ng-model="drawingMode" btn-radio="'t'">
+        <i title="Ellipse" class="fa fa-font"></i>
+      </button>
     </div>
   </div>
-  <div id="selectToolbox" class="toolbox" ng-show="mode === 's'">Select</div>
+  <div id="selectToolbox" class="toolbox" ng-show="mode === 's'">
+    <div class="btn-group-vertical">
+      <button type="button" class="btn btn-primary" ng-click="selectMode = 'select'">
+        <i title="select" class="fa fa-hand-o-up"></i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-click="selectMode = 'move'">
+        <i title="move" class="fa fa-arrows"></i>
+      </button>
+      <!--<button type="button" class="btn btn-primary" ng-click="selectMode = 'resize'">
+          <i title="resize" class="fa fa-home"></i>
+      </button>-->
+    </div>
+  </div>
   <div id="commandToolbox" class="toolbox" ng-show="mode === 'c'">
     <div class="btn-group-vertical">
+      <button type="button" class="btn btn-primary" ng-click="command.home()">
+        <i title="Home" class="fa fa-home"></i>
+      </button>
       <button type="button" class="btn btn-primary" ng-click="command.clear()">
         <i title="Clear" class="fa fa-trash-o"></i>
       </button>
       <button type="button" class="btn btn-primary" ng-click="command.switchSides()">
         <i title="Switch Sides" class="fa fa-arrows-h"></i>
       </button>
+      <button type="button" class="btn btn-primary" ng-click="showWindow=true">
+        <i title="Layers Menu" class="fa fa-align-justify"></i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-click="command.shareBoard()">
+        <i title="Share" class="fa fa-share-alt"></i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-click="command.copyBoard()">
+        <i title="Copy" class="fa fa-files-o"></i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-click="command.forkBoard()">
+        <i title="Fork" class="fa fa-code-fork"></i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-click="command.mergeBoard()">
+        <i title="Merge" class="fa fa-code-fork fa-flip-vertical"></i>
+      </button>
+      <button type="button" class="btn btn-primary" ng-click="command.differences()">
+        <i title="Differences" class="fa fa-exchange"></i>
+      </button>
     </div>
   </div>
 </div>
 
-<ul>
-  <li ng-repeat="stroke in strokes">{{stroke}}</li>
-</ul>
+<div id="layersWindow" draggable-window ng-show="showWindow">
+  <div id="layerHeader">
+    <span id="layerTitle">Layers</span>
+    <img id="closeIcon" src="public/images/closeIcon.png" ng-click="showWindow=false"/>
+  </div>
+  <div id="layerContent">
+    <div id="layerTable">
+      <div class="layerRow" ng-repeat="layer in layers" ng-class="{selectedLayer: layer.index==currentLayer}"
+           ng-click="command.switchActiveLayer(layer.index)">
+        <div class="layerCol visibilityCol" ng-click="command.changeVisibility(layer.index)"><img
+          id="layerVisibilityButton" src="{{layer.src}}"/></div>
+        <div class="layerCol layerName" ng-show="!(editLayerNameMode==layer.index)"
+             ng-dblclick="command.changeLayerName(layer.index)">{{layer.name}}
+        </div>
+        <input type="text" onclick="this.focus()" layerNameInput
+        " ng-model="altLayerName" ng-enter ng-show="editLayerNameMode==layer.index" />
+      </div>
+    </div>
+    <div id="layerToolbar">
+      <img id="addNewLayer" src="public/images/addNewLayer.png" ng-click="command.addNewLayer()" / >
+    </div>
+  </div>
+</div>
+<input id="commentEntry" type="text" ng-show="isCommenting" ng-enter ng-model="nextCommentStr"/>
+<div id="chatStreamContainer" ng-class="{'isOpen': chatStreamOpen, 'isClosed':!chatStreamOpen}">
+    <div id="chatStreamHeader" ng-click="chatStreamOpen=!chatStreamOpen">
+        <span id="chatStreamTitle">Chat Stream</span>
+    </div>
+    <div id="chatStreamContent">
+
+    </div>
+    <div id="chatStreamInput">
+        <input id="chatInput" type="text" ng-enter ng-model="chatStringEntry" />
+    </div>
+</div>
+
+<script type="text/javascript">
+  //Change the height of the containing div
+  var container = document.getElementById("canvas").parentElement;
+  container.style.height = "100%";
+  container.style.paddingTop = "45px"
+  container.style.position = "relative"
+  container.style.top = "-45px"
+</script>
+
+<script type="text/ng-template" id="cannot-auto-merge.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Merge Error</h3>
+  </div>
+  <div class="modal-body">
+    <p>
+      Unable to automatically merge branch. A shape has been modified in both the
+      branch and the parent. </p>
+
+    <p>
+      Which version is correct? </p>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="useBranch()">This Branch</button>
+    <button class="btn btn-primary" ng-click="useParent()">Parent</button>
+    <button class="btn btn-primary" ng-click="cancel()">Cancel</button>
+  </div>
+</script>

@@ -1,17 +1,9 @@
 package org.evilkitten.gitboard.application.services.atmosphere.message;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Data;
-import org.evilkitten.gitboard.application.services.whiteboard.WhiteboardAction;
+import org.evilkitten.gitboard.application.services.whiteboard.Whiteboard;
 
 @Data
 public class QueryMessage extends GitboardMessage {
-    final List<WhiteboardAction> actions = new ArrayList<>();
-
-    @Override
-    public String getType() {
-        return "query";
-    }
+    private Whiteboard whiteboard;
 }

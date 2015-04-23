@@ -1,0 +1,169 @@
+﻿body {
+	overflow:hidden;
+}
+
+div#canvas{
+	height:100%;
+	overflow: scroll;
+}
+
+div#toolbox{
+	margin-top: 45px;
+}
+
+div#layersWindow{
+    position:absolute;
+    z-index:2;
+    visibility:visible;
+
+    width:250px;
+    height:300px;
+    top:500px;
+    left:300px;
+    padding-top:2px;
+    padding-left:4px;
+    padding-right:4px;
+    padding-bottom:4px;
+
+    background: #3366FF;
+}
+
+div#layerHeader{
+    position:relative;
+
+    width: 100%;
+    height: 25px;
+}
+
+div#layerContent{
+    width:100%;
+    height:270px;
+
+    background: white;
+}
+
+div#layerTable{
+    width:100%;
+    height:240px;
+
+    overflow-y:scroll;
+}
+
+div#layerToolbar{
+    width:100%;
+    height:30px;
+
+    border-top: 1px solid gray;
+}
+
+div#chatStreamContainer{
+    position: fixed;
+    bottom: 25px;
+    right: 30px;
+
+    width: 200px;
+    cursor: pointer;
+
+    background: #CCCCCC;
+    overflow: hidden;
+}
+div#chatStreamContainer.isOpen{
+    height: 300px;
+}
+div.isClosed{
+    height: 20px;
+}
+div#chatStreamHeader{
+    height: 20px;
+    width: 100%;
+
+    background: #CCCC9A;
+}
+
+div#chatStreamContent{
+    height: 230px;
+    width: 180px;
+    background: white;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    
+    overflow-y: scroll;
+}
+
+div#chatStreamInput{
+    width: 100%;
+    margin-top:5px;
+
+    border-top: 1px solid black;
+}
+
+div.layerRow{
+    width:100%;
+    height:40px;
+
+    border-bottom: 1px solid grey;
+	background: white;
+}
+div.layerRow.selectedLayer{
+	background: gray;	
+}
+
+div.layerName{
+    font-size: 15px;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+div.layerCol{
+    float:left;
+}
+
+span#layerTitle{
+    margin-left: 20px;
+    margin-top: 8px;
+
+    color: white;
+}
+
+span#chatStreamTitle{
+    margin-left:60px;
+}
+
+img#closeIcon{
+    width:20px;
+    height: 20px;
+    float: right;
+}
+img#closeIcon:hover{
+    cursor:pointer;
+    background: red;
+}
+
+img#addNewLayer{
+    float: right;
+    margin-top: 2px;
+    margin-right:2px;
+}
+img#addNewLayer:hover{
+    background: grey;
+}
+img#layerVisibilityButton{
+    width: 35px;
+    height: 35px;
+}
+img#layerVisibilityButton:hover{
+    cursor:pointer;
+}
+input#commentEntry{
+    position:absolute;
+
+    top:100px;
+    left:100px;
+    z-index:50000;
+}
+
+input#chatInput{
+    margin-top: 4px;
+    margin-left: 3px;
+}

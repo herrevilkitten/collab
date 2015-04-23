@@ -13,8 +13,9 @@
     <script src="//hangoutsapi.talkgadget.google.com/hangouts/api/hangout.js?v=1.4" type="text/javascript"></script>
 
     <link href="public/lib/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="public/lib/angular-ui/colorpicker/css/colorpicker.css" rel="stylesheet">
+    <link href="bower_components/angular-toastr/dist/angular-toastr.css" rel="stylesheet">
 
     <script src="//code.jquery.com/jquery-1.11.0.min.js" type="text/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js" type="text/javascript"></script>
@@ -42,12 +43,22 @@
     <jsp:include page="styles.jsp"/>
 </head>
 <body>
-<div ng-controller="UserController">
-    <input type="button" id="signoutButton" ng-click="signOut()" value="Sign out"/>
+<div ng-controller="UserController" id="banner" style="position:relative; z-index:4000;">
+	<img id="logo" style="position:absolute; top:8px; left:10px; height:40px; width:40px;" src="public/images/collab.png"/>
+  
+  	<div id="userBannerContainer" style="float:right; margin-right:8px; margin-top:0px;">
+		<span id="userName" style="font-weight:bolder; font-size:20px; display:block; margin-top:5px;">DoraExploradora</span>
+		<span id="signoutLink" ng-click="signOut()" style="cursor:pointer; position:relative; display:block; position:relative; top:-4px; right:0px; color:blue;">Signout</span>
+	</div>
+	<img id="profilePic" style="float:right; width:37px; height:37px; margin-right:8px; margin-top:8px; " src="public/images/blankProfilePic.png" />
+	<!--<img id="cornerTab" style="position:absolute; width:20px; height:20px; top:30px; right:0px;" src="public/images/cornerTab.png" />-->
 </div>
 
 <div ng-view></div>
 <script src="application/modules/lib/SVG.js"></script>
+
+<!-- angular-toastr -->
+<script src="bower_components/angular-toastr/dist/angular-toastr.js" type="text/javascript"></script>
 
 <script src="application/app.js"></script>
 <script src="application/modules/user/UserModule.js"></script>
@@ -57,6 +68,16 @@
 <!-- Whiteboard -->
 <script src="application/modules/whiteboard/whiteboard.module.js"></script>
 <script src="application/modules/whiteboard/whiteboard.controller.js"></script>
+<script src="application/modules/whiteboard/whiteboard.messagefactory.js"></script>
+<script src="application/modules/whiteboard/whiteboard.socketfactory.js"></script>
 <script src="application/modules/whiteboard/whiteboard.resource.js"></script>
+<script src="application/modules/whiteboard/whiteboard.shapefactory.js"></script>
+
+<!-- inline -->
+<script type="text/javascript">
+    window.user = ${it.user};
+
+	document.getElementById("userName").innerHTML = window.user.displayName.substring(0,window.user.displayName.length-10);
+</script>
 </body>
 </html>

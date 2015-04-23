@@ -1,6 +1,7 @@
 package org.evilkitten.gitboard.application.services.whiteboard;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -12,7 +13,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import de.danielbechler.diff.node.DiffNode;
 import org.evilkitten.gitboard.application.services.user.CurrentUser;
+import org.evilkitten.gitboard.application.services.whiteboard.shape.BaseShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,35 +26,80 @@ public class WhiteboardWeb {
     final static Whiteboard WHITEBOARD = new Whiteboard();
 
     private final CurrentUser currentUser;
-    private final WhiteboardDao whiteboardDao;
+    private final WhiteboardService whiteboardService;
 
     @Inject
-    public WhiteboardWeb(CurrentUser currentUser, WhiteboardDao whiteboardDao) {
+    public WhiteboardWeb(CurrentUser currentUser, WhiteboardService whiteboardService) {
         this.currentUser = currentUser;
-        this.whiteboardDao = whiteboardDao;
+        this.whiteboardService = whiteboardService;
     }
 
     @GET
     @Path("{boardId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Whiteboard getById(@PathParam("boardId") Integer boardId) {
-        return whiteboardDao.getById(boardId);
+        return whiteboardService.getById(boardId);
     }
 
     @GET
     @Path("/byUser")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Whiteboard> getAllByUser() {
-        return whiteboardDao.getAllByCreator(currentUser.get());
+        return whiteboardService.getAllByCreator(currentUser.get());
+    }
+
+    @GET
+    @Path("/byAccess")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Whiteboard> getAllByAccess() {
+        return whiteboardService.getAllByAccess(currentUser.get());
     }
 
     @POST
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create() {
-        LOG.info("User {} creating new board", currentUser.get());
-        Whiteboard board = whiteboardDao.create(currentUser.get());
+    public Response create(NewWhiteboard newWhiteboard) {
+        LOG.info("User {} creating new board: {}", currentUser.get(), newWhiteboard);
+        Whiteboard board = whiteboardService.create(currentUser.get(), newWhiteboard.getName());
         return Response.status(Response.Status.CREATED).entity(board).build();
+    }
+
+    @POST
+    @Path("/copy")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response copy(CopyWhiteboard copyWhiteboard) {
+        LOG.info("User {} copying board: {}", currentUser.get(), copyWhiteboard);
+        Whiteboard board = whiteboardService.copy(currentUser.get(), copyWhiteboard.getId());
+        return Response.status(Response.Status.CREATED).entity(board).build();
+    }
+
+    @POST
+    @Path("/branch")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response branch(CopyWhiteboard copyWhiteboard) {
+        LOG.info("User {} branching board: {}", currentUser.get(), copyWhiteboard);
+        Whiteboard board = whiteboardService.branch(currentUser.get(), copyWhiteboard.getId());
+        return Response.status(Response.Status.CREATED).entity(board).build();
+    }
+
+    @POST
+    @Path("/merge")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response merge(CopyWhiteboard copyWhiteboard) {
+        LOG.info("User {} merging board: {}", currentUser.get(), copyWhiteboard);
+        Set<BaseShape> baseShapes = whiteboardService.merge(copyWhiteboard.getId());
+        return Response
+            .status(baseShapes.isEmpty() ? Response.Status.OK : Response.Status.CONFLICT)
+            .entity(baseShapes)
+            .build();
+    }
+
+    @POST
+    @Path("/diff")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response diff(DiffWhiteboard diffWhiteboard) {
+        DiffNode differences = whiteboardService.findDifferences(diffWhiteboard.getSource(), diffWhiteboard.getDestination());
+        return Response.status(Response.Status.OK).build();
     }
 
     @GET

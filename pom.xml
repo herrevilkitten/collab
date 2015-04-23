@@ -42,6 +42,8 @@
     <tomcat.version>7.0.50</tomcat.version>
     <typesafeconfig-for-webapps.version>1.1</typesafeconfig-for-webapps.version>
     <jcabi-manifests.version>1.1</jcabi-manifests.version>
+    <java-object-diff.version>0.91.1</java-object-diff.version>
+    <lombok.version>1.16.2</lombok.version>
   </properties>
 
   <dependencies>
@@ -278,6 +280,12 @@
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-manifests</artifactId>
       <version>${jcabi-manifests.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>de.danielbechler</groupId>
+      <artifactId>java-object-diff</artifactId>
+      <version>${java-object-diff.version}</version>
     </dependency>
   </dependencies>
 

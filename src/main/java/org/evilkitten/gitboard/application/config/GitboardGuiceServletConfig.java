@@ -11,6 +11,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.jcabi.manifests.Manifests;
 import org.evilkitten.gitboard.application.database.DatabaseModule;
 import org.evilkitten.gitboard.application.services.JspModule;
+import org.evilkitten.gitboard.application.services.json.JsonModule;
 import org.evilkitten.gitboard.application.services.provider.ProviderModule;
 import org.evilkitten.gitboard.application.services.user.UserModule;
 import org.evilkitten.gitboard.application.services.whiteboard.WhiteboardModule;
@@ -28,13 +29,14 @@ public class GitboardGuiceServletConfig extends GuiceServletContextListener {
     protected Injector getInjector() {
         LOG.info("Configuring " + getClass().getName());
         injector = Guice.createInjector(
-            new UserModule(),
-            new JspModule(),
-            new GitboardServletModule(),
             new ConfigurationModule(servletContext),
             new DatabaseModule(),
-            new WhiteboardModule(),
+            new GitboardServletModule(),
+            new JsonModule(),
+            new JspModule(),
             new ProviderModule(),
+            new UserModule(),
+            new WhiteboardModule(),
             new QuartzModule() {
                 @Override
                 protected void schedule() {

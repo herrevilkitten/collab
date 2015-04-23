@@ -85,10 +85,10 @@ public class Statement {
             int start = matcher.start();
             int end = matcher.end();
             String parameterName = matcher.group(1);
-            Object parameterValue = statementParameters.get(parameterName);
-            if (parameterValue == null) {
+            if (!statementParameters.containsKey(parameterName)) {
                 throw new IllegalArgumentException("No query parameter matching '" + parameterName + "'");
             }
+            Object parameterValue = statementParameters.get(parameterName);
             preparedStatement.replace(start, end, "?");
             if (LOG.isDebugEnabled()) {
                 Matcher loggingMatcher = PARAMETER_PATTERN.matcher(loggingStatement);
@@ -122,6 +122,7 @@ public class Statement {
             return preparedStatement.executeQuery();
         } catch (Exception e) {
             LOG.error("Exception while executing statement: {}", statementBuilder.toString());
+            LOG.error("{}", e);
             throw e;
         }
     }
@@ -140,6 +141,7 @@ public class Statement {
             return preparedStatement.executeUpdate();
         } catch (Exception e) {
             LOG.error("Exception while executing statement: {}", statementBuilder.toString());
+            LOG.error("{}", e);
             throw e;
         }
     }
@@ -159,6 +161,7 @@ public class Statement {
             return new UncheckedResultSet(preparedStatement.getGeneratedKeys());
         } catch (Exception e) {
             LOG.error("Exception while executing statement: {}", statementBuilder.toString());
+            LOG.error("{}", e);
             throw e;
         }
     }
@@ -182,7 +185,7 @@ public class Statement {
     public <T> List<T> queryForRows(DataSource dataSource, RowMapper<? extends T> rowMapper) {
         try (Connection connection = dataSource.getConnection()) {
 
-            ResultSet resultSet = executeQuery(connection);
+            UncheckedResultSet resultSet = new UncheckedResultSet(executeQuery(connection));
             List<T> results = new ArrayList<>();
             while (resultSet.next()) {
                 results.add(rowMapper.mapRow(resultSet));
