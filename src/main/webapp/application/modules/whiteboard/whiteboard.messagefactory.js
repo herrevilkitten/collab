@@ -10,12 +10,11 @@
                         return angular.toJson(this);
                     }
                 },
-                boardId = $routeParams.boardId,
                 messages = {
                     createAddShape: function(shape) {
                         return angular.extend({}, BASE_MESSAGE, {
                             type: MESSAGE_PACKAGE + '.AddShapeMessage',
-                            boardId: boardId,
+                            boardId: $routeParams.boardId,
                             shape: shape
                         });
                     },
@@ -23,7 +22,7 @@
                     createRemoveShape: function(shapeId) {
                         return angular.extend({}, BASE_MESSAGE, {
                             type: MESSAGE_PACKAGE + '.RemoveShapeMessage',
-                            boardId: boardId,
+                            boardId: $routeParams.boardId,
                             shapeId: shapeId
                         });
                     },
@@ -31,28 +30,28 @@
                     createHeartbeat: function() {
                         return angular.extend({}, BASE_MESSAGE, {
                             type: MESSAGE_PACKAGE + '.HeartbeatMessage',
-                            boardId: boardId
+                            boardId: $routeParams.boardId
                         });
                     },
 
                     createQuery: function() {
                         return angular.extend({}, BASE_MESSAGE, {
                             type: MESSAGE_PACKAGE + '.QueryMessage',
-                            boardId: boardId
+                            boardId: $routeParams.boardId
                         });
                     },
 
                     createWelcome: function() {
                         return angular.extend({}, BASE_MESSAGE, {
                             type: MESSAGE_PACKAGE + '.WelcomeMessage',
-                            boardId: boardId
+                            boardId: $routeParams.boardId
                         });
                     },
 
                     createChatMessage: function (text) {
                         return angular.extend({}, BASE_MESSAGE, {
                             type: MESSAGE_PACKAGE + ".ChatMessage",
-                            boardId: boardId,
+                            boardId: $routeParams.boardId,
                             chat: text
                         });
                     }
