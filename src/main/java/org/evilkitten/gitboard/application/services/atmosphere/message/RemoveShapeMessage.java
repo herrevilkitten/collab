@@ -5,6 +5,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RemoveShapeMessage extends ActionMessage {
+public class RemoveShapeMessage extends ActionMessage implements EchoedMessage {
     private int shapeId;
 }

@@ -6,6 +6,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ChatMessage extends ActionMessage {
+public class ChatMessage extends ActionMessage implements EchoedMessage {
 	private String chat;
 }

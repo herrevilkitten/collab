@@ -13,6 +13,7 @@ import org.atmosphere.cpr.AtmosphereResourceEvent;
 import org.evilkitten.gitboard.application.entity.User;
 import org.evilkitten.gitboard.application.services.atmosphere.message.ActionMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.AddShapeMessage;
+import org.evilkitten.gitboard.application.services.atmosphere.message.EchoedMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.GitboardMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.RemoveShapeMessage;
 import org.evilkitten.gitboard.application.services.atmosphere.message.WelcomeMessage;
@@ -86,6 +87,10 @@ public class MessageWeb extends HttpServlet {
             resource.getBroadcaster().broadcast(jsonTranscoder.toJson(message));
         } else if (message instanceof RemoveShapeMessage) {
 //            whiteboardService.removeShape(((RemoveShapeMessage) message).getShapeId());
+        }
+
+        if (message instanceof EchoedMessage) {
+            resource.getBroadcaster().broadcast(jsonTranscoder.toJson(message));
         }
     }
 }
