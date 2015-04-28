@@ -133,7 +133,21 @@
             }
 
             function onChatMessage(socket, response, message) {
-                $scope.chatStreamOpen = false;
+                var prevChatUserId = -1;
+                if ($scope.chatMessages.length > 0) {
+                    prevChatUserId = $scope.chatMessages[$scope.chatMessages.length - 1].userid;
+                }
+                
+                $scope.chatMessages.push({
+                    userid: message.actor.id,
+                    previousIdSame: (prevChatUserId === message.actor.id),
+                    username: message.actor.displayName,
+                    chat: message.chat
+                });
+
+                $('#chatStreamContent').animate({ scrollTop: $('#chatStreamContent')[0].scrollHeight}, 100);
+
+                $scope.$apply();
             }
 
             var messageHandlers = {
@@ -176,6 +190,7 @@
             $scope.mode = MODE_DRAWING;
             $scope.drawingMode = MODE_DRAWING_PENCIL;
             $scope.strokes = [];
+            $scope.chatMessages = [];
             $scope.color = {
                 foreground: 'rgba(0, 0, 0, 1)',
                 fill: 'rgba(255, 255, 255, 1)',
