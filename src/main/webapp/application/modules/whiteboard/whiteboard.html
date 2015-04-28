@@ -123,7 +123,10 @@
         <span id="chatStreamTitle">Chat Stream</span>
     </div>
     <div id="chatStreamContent">
-
+        <div class="singleChatMessage" ng-repeat="singleChat in chatMessages">
+            <span class="singleChatUser" ng-show="!singleChat.previousIdSame">{{singleChat.username}}</span>
+            <span class="singleChatContent">{{singleChat.chat}}</span>
+         </div>
     </div>
     <div id="chatStreamInput">
         <input id="chatInput" type="text" ng-enter ng-model="chatStringEntry" />
